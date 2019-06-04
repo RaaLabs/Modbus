@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="../Build/MSBuild/default.props"/>
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+        <AssemblyName>Dolittle.TimeSeries.Modbus</AssemblyName>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectCapability Include="AzureIoTEdgeModule" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Dolittle.TimeSeries.Modules" Version="2.*" />
+    </ItemGroup>
+</Project>
