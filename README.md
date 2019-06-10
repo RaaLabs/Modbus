@@ -1,6 +1,6 @@
 # Modbus
 
-[![Build Status](https://dolittle.visualstudio.com/Dolittle%20open-source%20repositories/_apis/build/status/dolittle-timeseries.Terasaki?branchName=master)](https://dolittle.visualstudio.com/Dolittle%20open-source%20repositories/_build/latest?definitionId=11&branchName=master)
+[![Build Status](https://dev.azure.com/dolittle/Dolittle%20open-source%20repositories/_apis/build/status/dolittle-timeseries.Modbus?branchName=master)](https://dev.azure.com/dolittle/Dolittle%20open-source%20repositories/_build/latest?definitionId=18&branchName=master)
 
 ## Cloning
 
