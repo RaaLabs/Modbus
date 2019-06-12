@@ -79,6 +79,25 @@
                     "timeToLiveSecs": 7200
                 }
             }
+        },
+        "Modbus": {
+            "properties.desired": {
+                "connector": {
+                    "unit": 1,
+                    "tagsToRegisters": {
+                        "ph": {
+                            "startingAddress":2,
+                            "dataType":"float"
+                        }
+                    }
+                },
+                "pullConnectors": {
+                    "Modbus": {
+                        "interval": "1000"
+                    }
+                }
+            }
         }
     }
 }
+

@@ -1,0 +1,26 @@
+{
+    "ph": {
+        "startingAddress": 1,
+        "dataType": 3
+    },
+    "orp": {
+        "startingAddress": 3,
+        "dataType": 3
+    },
+    "temperature": {
+        "startingAddress": 5,
+        "dataType": 3
+    },
+    "conductivity": {
+        "startingAddress": 7,
+        "dataType": 3
+    },
+    "flow": {
+        "startingAddress": 9,
+        "dataType": 3
+    },
+    "system state": {
+        "startingAddress": 11,
+        "dataType": 3
+    }
+}
