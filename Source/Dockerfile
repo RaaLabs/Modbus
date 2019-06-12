@@ -23,7 +23,7 @@ WORKDIR /app/Source/
 RUN dotnet restore
 
 COPY Source/ ./
-RUN dotnet publish -c Debug -o out
+RUN dotnet publish -c Release -o out
 
 
 FROM base
