@@ -11,8 +11,10 @@
     <ItemGroup>
         <ProjectCapability Include="AzureIoTEdgeModule" />
     </ItemGroup>
+    
 
     <ItemGroup>
-        <PackageReference Include="Dolittle.TimeSeries.Modules" Version="2.*" />
+        <PackageReference Include="Dolittle.TimeSeries.Modules" Version="4.*" />
+        <PackageReference Include="nmodbus" Version="3.0.58" />
     </ItemGroup>
 </Project>
