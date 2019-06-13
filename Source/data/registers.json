@@ -1,0 +1,26 @@
+{
+    "first": {
+        "startingAddress": 1,
+        "dataType": 3
+    },
+    "second": {
+        "startingAddress": 3,
+        "dataType": 3
+    },
+    "third": {
+        "startingAddress": 5,
+        "dataType": 3
+    },
+    "fourth": {
+        "startingAddress": 7,
+        "dataType": 3
+    },
+    "fifth": {
+        "startingAddress": 9,
+        "dataType": 3
+    },
+    "sixth": {
+        "startingAddress": 11,
+        "dataType": 3
+    }
+}
