@@ -1,0 +1,31 @@
+{
+    "Connector": {
+        "unit": 1,
+        "tagsToRegisters": {
+            "first": {
+                "startingAddress": 2,
+                "dataType": "float"
+            }
+        }
+    },
+    "PullConnectors": {
+        "Modbus": {
+            "interval": "1000"
+        }
+    },
+    "connector": {
+        "unit": 1,
+        "tagsToRegisters": {
+            "first": {
+                "startingAddress": 2,
+                "dataType": "float"
+            }
+        }
+    },
+    "pullConnectors": {
+        "Modbus": {
+            "interval": "1000"
+        }
+    },
+    "$version": 3
+}
