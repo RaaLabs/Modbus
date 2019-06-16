@@ -39,7 +39,7 @@
             "status": "running",
             "restartPolicy": "always",
             "settings": {
-              "image": "dolittle/timeseries-modbus:1.0.0-amd64",
+              "image": "dolittle/timeseries-modbus",
               "createOptions": "{\"HostConfig\":{}}"
             }
           }
@@ -61,12 +61,8 @@
       "properties.desired": {
         "connector": {
           "unit": 1,
-          "tagsToRegisters": {
-            "first": {
-              "startingAddress": 2,
-              "dataType": "float"
-            }
-          }
+          "ip": "192.168.200.10",
+          "port": "502"
         },
         "pullConnectors": {
           "Modbus": {

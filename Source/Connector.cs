@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using Dolittle.Logging;
 using Dolittle.TimeSeries.Modules;
+using Dolittle.TimeSeries.Modules.Connectors;
 using NModbus;
 
 namespace Dolittle.TimeSeries.Modbus
