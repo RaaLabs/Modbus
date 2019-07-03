@@ -9,7 +9,6 @@ using Dolittle.TimeSeries.Modules.Connectors;
 
 namespace Dolittle.TimeSeries.Modbus
 {
-
     /// <summary>
     /// Represents a <see cref="IAmAPullConnector">pull connector</see> for Modbus
     /// </summary>
