@@ -6,6 +6,7 @@ using Dolittle.Configuration;
 
 namespace Dolittle.TimeSeries.Modbus
 {
+
     /// <summary>
     /// Represents the configuration for <see cref="Connector"/>
     /// </summary>
@@ -18,11 +19,15 @@ namespace Dolittle.TimeSeries.Modbus
         /// <param name="ip">The IP address for the connector</param>
         /// <param name="port">The Port to connect to</param>
         /// <param name="unit"><see cref="Unit"/> identifier</param>
-        public ConnectorConfiguration(string ip, int port, Unit unit)
+        /// <param name="endianness"><see cref="Endianness"/> to expect from the master</param>
+        /// <param name="useASCII">Use ASCII transport</param>
+        public ConnectorConfiguration(string ip, int port, Unit unit, Endianness endianness, bool useASCII)
         {
             Ip = ip;
             Port = port;
             Unit = unit;
+            Endianness = endianness;
+            UseASCII = useASCII;
         }
 
         /// <summary>
@@ -39,5 +44,16 @@ namespace Dolittle.TimeSeries.Modbus
         /// Gets the <see cref="Unit"/> identifier
         /// </summary>
         public Unit Unit { get; }
+
+        /// <summary>
+        /// Gets the <see cref="Endianness"/> expected from the master
+        /// </summary>
+        public Endianness Endianness { get;}
+
+        /// <summary>
+        /// Gets wether or not to use ASCII transport
+        /// </summary>
+        /// <value></value>
+        public bool UseASCII { get; }
     }
 }
