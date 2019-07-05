@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modbus", "Source\Modbus.csproj", "{BA3CBC89-BC4E-4538-9249-997D9C11DE93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modbus", "Specifications\Modbus.csproj", "{0A57254F-1E64-43C2-9063-208AEC278FB9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modbus.Specs", "Specifications\Modbus.csproj", "{0A57254F-1E64-43C2-9063-208AEC278FB9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
