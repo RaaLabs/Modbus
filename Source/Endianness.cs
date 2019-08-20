@@ -24,7 +24,7 @@ namespace Dolittle.TimeSeries.Modbus
         /// <summary>
         /// High byte first, high word first
         /// </summary>
-        HighByteHighWord,
+        HighByteHighWord=1,
 
         /// <summary>
         /// High byte first, low word first
