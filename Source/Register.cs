@@ -21,16 +21,16 @@ namespace Dolittle.TimeSeries.Modbus
         /// 2: 4 bytes 
         /// ...
         /// </remarks>
-        public ushort StartingAddress { get; }
+        public ushort StartingAddress { get; set; }
 
         /// <summary>
         /// Gets or sets what <see cref="DataType"/> to expect for the register
         /// </summary>
-        public DataType DataType { get; }
+        public DataType DataType { get; set; }
 
         /// <summary>
         /// The <see cref="FunctionCode"/> to use for the read
         /// </summary>
-        public FunctionCode FunctionCode { get; }
+        public FunctionCode FunctionCode { get; set; }
     }
 }
