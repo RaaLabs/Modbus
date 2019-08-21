@@ -5,6 +5,7 @@
 using System;
 using System.Net.Sockets;
 using Dolittle.Lifecycle;
+using Dolittle.Logging;
 using NModbus;
 using NModbus.IO;
 
@@ -17,18 +18,22 @@ namespace Dolittle.TimeSeries.Modbus
     public class Master : IMaster, IDisposable
     {
         readonly ConnectorConfiguration _configuration;
+        readonly ILogger _logger;
 
         TcpClient _client;
         TcpClientAdapter _adapter;
-        IModbusMaster _master;      
+        IModbusMaster _master;
+        
 
         /// <summary>
         /// Initializes a new instance of <see cref="Master"/>
         /// </summary>
         /// <param name="configuration"><see cref="ConnectorConfiguration">Configuration</see></param>
-        public Master(ConnectorConfiguration configuration)
+        /// <param name="logger"><see cref="ILogger"/> to use for logging</param>
+        public Master(ConnectorConfiguration configuration, ILogger logger)
         {
             _configuration = configuration;
+            _logger = logger;
         }
 
         /// <inheritdoc/>
@@ -46,6 +51,8 @@ namespace Dolittle.TimeSeries.Modbus
         public byte[] Read(Register register)
         {
             MakeSureClientIsConnected();
+
+            _logger.Information($"Getting data from {register.StartingAddress} as DataType {Enum.GetName(typeof(DataType),register.DataType)}");
 
             ushort[] result;
             var size = GetDataSizeFrom(register.DataType);
@@ -98,7 +105,8 @@ namespace Dolittle.TimeSeries.Modbus
                 _client = new TcpClient(_configuration.Ip, _configuration.Port);
                 _adapter = new TcpClientAdapter(_client);
                 var factory = new ModbusFactory();
-                if( _configuration.UseASCII ) _master = factory.CreateAsciiMaster(_adapter);
+                if (_configuration.UseASCII) _master = factory.CreateAsciiMaster(_adapter);
+                else if (_configuration.Protocol == Protocol.Tcp) _master = factory.CreateMaster(_client);
                 else _master = factory.CreateRtuMaster(_adapter);
             }
         }
