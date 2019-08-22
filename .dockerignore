@@ -2,5 +2,5 @@
 **/bin
 **/Dockerfile
 
-connector.json
-pullConnectors.json
+**/connector.json
+**/pullConnectors.json
