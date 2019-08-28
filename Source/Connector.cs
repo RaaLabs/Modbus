@@ -16,7 +16,7 @@ namespace Dolittle.TimeSeries.Modbus
     {
         readonly RegistersConfiguration _registers;
         readonly IMaster _master;
-        readonly ILogger _logger;       
+        readonly ILogger _logger;
 
         /// <summary>
         /// Initializes a new instance of <see cref="Connector"/>
@@ -56,12 +56,13 @@ namespace Dolittle.TimeSeries.Modbus
 
         /// <inheritdoc/>
         public object GetData(Tag tag)
-        {          
-            return new Measurement<Int32> { Value = 0 };
+        {
+            return new Measurement<Int32> {  Value = 0 };
         }
 
         object ConvertBytes(DataType type, byte[] bytes)
         {
+            /*
             switch (type)
             {
                 case DataType.Int32:
@@ -71,7 +72,17 @@ namespace Dolittle.TimeSeries.Modbus
                 case DataType.Float:
                     return new Measurement<float> { Value =  BitConverter.ToSingle(bytes) };
             }
+            */
 
+            switch (type)
+            {
+                case DataType.Int32:
+                    return BitConverter.ToInt32(bytes);
+                case DataType.Uint32:
+                    return BitConverter.ToUInt32(bytes);
+                case DataType.Float:
+                    return BitConverter.ToSingle(bytes);
+            }
             return 0;
         }
     }
