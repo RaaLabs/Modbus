@@ -8,7 +8,7 @@ namespace Dolittle.TimeSeries.Modbus
     /// <summary>
     /// The protocol to use for connections
     /// </summary>
-    public enum Protocol 
+    public enum Protocol
     {
         /// <summary>
         /// Straight Modbus TCP

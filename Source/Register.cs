@@ -12,6 +12,11 @@ namespace Dolittle.TimeSeries.Modbus
     public class Register : Value<Register>
     {
         /// <summary>
+        /// Gets the <see cref="Unit"/> identifier
+        /// </summary>
+        public Unit Unit { get; set; }
+
+        /// <summary>
         /// Gets or sets the starting address for the register
         /// </summary>
         /// <remarks>
@@ -21,16 +26,16 @@ namespace Dolittle.TimeSeries.Modbus
         /// 2: 4 bytes 
         /// ...
         /// </remarks>
-        public ushort StartingAddress { get; set; }
+        public ushort StartingAddress { get; set; }
 
         /// <summary>
         /// Gets or sets what <see cref="DataType"/> to expect for the register
         /// </summary>
-        public DataType DataType { get; set; }
+        public DataType DataType { get; set; }
 
         /// <summary>
         /// The <see cref="FunctionCode"/> to use for the read
         /// </summary>
-        public FunctionCode FunctionCode { get; set; }
+        public FunctionCode FunctionCode { get; set; }
     }
 }

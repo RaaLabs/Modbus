@@ -23,17 +23,18 @@ namespace Dolittle.TimeSeries.Modbus
             ushort[] targetShorts = new ushort[shorts.Length];
             Array.Copy(shorts, targetShorts, shorts.Length);
 
-            if( endianness.ShouldSwapWords()) Array.Reverse(targetShorts);
+            if (endianness.ShouldSwapWords()) Array.Reverse(targetShorts);
 
-            var bytes = new byte[targetShorts.Length*2];
-            var byteIndex=0;
-            for( var i=0; i<targetShorts.Length; i++)
+            var bytes = new byte[targetShorts.Length * 2];
+            var byteIndex = 0;
+            for (var i = 0; i < targetShorts.Length; i++)
             {
                 var resultBytes = BitConverter.GetBytes(targetShorts[i]);
-                if( endianness.ShouldSwapBytes() ) Array.Reverse(resultBytes);
+
+                if (endianness.ShouldSwapBytes()) Array.Reverse(resultBytes);
 
                 Array.Copy(resultBytes, 0, bytes, byteIndex, resultBytes.Length);
-                
+
                 byteIndex += resultBytes.Length;
             }
 
