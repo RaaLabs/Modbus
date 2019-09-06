@@ -17,7 +17,7 @@ namespace Dolittle.TimeSeries.Modbus
         /// <param name="unit">Byte representation to convert from</param>
         public static implicit operator Unit(byte unit)
         {
-            return new Unit { Value = unit };
+            return new Unit { Value = unit };
         }
     }
 }

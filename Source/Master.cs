@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 using System;
 using System.Net.Sockets;
+using Dolittle.Collections;
 using Dolittle.Lifecycle;
 using Dolittle.Logging;
 using NModbus;
@@ -23,7 +24,7 @@ namespace Dolittle.TimeSeries.Modbus
         TcpClient _client;
         TcpClientAdapter _adapter;
         IModbusMaster _master;
-        
+
 
         /// <summary>
         /// Initializes a new instance of <see cref="Master"/>
@@ -52,7 +53,7 @@ namespace Dolittle.TimeSeries.Modbus
         {
             MakeSureClientIsConnected();
 
-            _logger.Information($"Getting data from {register.StartingAddress} as DataType {Enum.GetName(typeof(DataType),register.DataType)}");
+            _logger.Information($"Getting data from slave {register.Unit} register {register.StartingAddress} as DataType {Enum.GetName(typeof(DataType), register.DataType)}");
 
             ushort[] result;
             var size = GetDataSizeFrom(register.DataType);
@@ -60,17 +61,19 @@ namespace Dolittle.TimeSeries.Modbus
             switch (register.FunctionCode)
             {
                 case FunctionCode.HoldingRegister:
-                    result = _master.ReadHoldingRegisters(_configuration.Unit, register.StartingAddress, size);
+                    result = _master.ReadHoldingRegisters(register.Unit, register.StartingAddress, size);
                     break;
                 case FunctionCode.InputRegister:
-                    result = _master.ReadInputRegisters(_configuration.Unit, register.StartingAddress, size);
+                    result = _master.ReadInputRegisters(register.Unit, register.StartingAddress, size);
                     break;
                 default:
                     result = new ushort[0];
                     break;
             }
 
+
             var bytes = result.GetBytes(_configuration.Endianness);
+
             return bytes;
         }
 

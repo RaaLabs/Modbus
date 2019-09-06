@@ -16,7 +16,7 @@ namespace Dolittle.TimeSeries.Modbus
         /// <summary>
         /// Discrete output coil
         /// </summary>
-        Coil=1,
+        Coil = 1,
 
         /// <summary>
         /// Holding registers
@@ -27,7 +27,7 @@ namespace Dolittle.TimeSeries.Modbus
         /// Discrete input contacts
         /// </summary>
         Input,
-        
+
         /// <summary>
         /// Input register
         /// </summary>

@@ -10,7 +10,7 @@ namespace Dolittle.TimeSeries.Modbus
     {
         static void Main()
         {
-            Bootloader.Configure(_ => {}).Start().Wait();
+            Bootloader.Configure(_ => { }).Start().Wait();
         }
     }
 }

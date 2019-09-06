@@ -13,7 +13,7 @@ namespace Dolittle.TimeSeries.Modbus
     /// Represents the configuration for registers
     /// </summary>
     [Name("registers")]
-    public class RegistersConfiguration : 
+    public class RegistersConfiguration :
         ReadOnlyDictionary<Tag, Register>,
         IConfigurationObject
     {

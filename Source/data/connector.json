@@ -1,8 +1,7 @@
 {
-    "unit": 1,
     "ip": "127.0.0.1",
     "port": "1337",
     "useASCII": false,
-    "endianness": 4,
-    "protocol": 1
+    "endianness": 3,
+    "protocol": 2
 }

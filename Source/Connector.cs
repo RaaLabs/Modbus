@@ -44,7 +44,6 @@ namespace Dolittle.TimeSeries.Modbus
             foreach ((Tag tag, Register register) in _registers)
             {
                 var bytes = _master.Read(register);
-
                 var payload = ConvertBytes(register.DataType, bytes);
                 _logger.Information($"Value : {payload}");
 
@@ -57,23 +56,11 @@ namespace Dolittle.TimeSeries.Modbus
         /// <inheritdoc/>
         public object GetData(Tag tag)
         {
-            return new Measurement<Int32> {  Value = 0 };
+            return new Measurement<Int32> { Value = 0 };
         }
 
         object ConvertBytes(DataType type, byte[] bytes)
         {
-            /*
-            switch (type)
-            {
-                case DataType.Int32:
-                    return new Measurement<Int32> { Value =  BitConverter.ToInt32(bytes) };
-                case DataType.Uint32:
-                    return new Measurement<UInt32> { Value =  BitConverter.ToUInt32(bytes) };
-                case DataType.Float:
-                    return new Measurement<float> { Value =  BitConverter.ToSingle(bytes) };
-            }
-            */
-
             switch (type)
             {
                 case DataType.Int32:

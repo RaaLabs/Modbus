@@ -1,12 +1,14 @@
 {
     "first": {
-        "startingAddress": 251,
+        "unit": 2,
+        "startingAddress": 6,
         "dataType": 3,
-        "functionCode": 2
+        "functionCode": 4
     },
     "second": {
-        "startingAddress": 253,
+        "unit": 11,
+        "startingAddress": 6,
         "dataType": 3,
-        "functionCode": 2
+        "functionCode": 4
     }
 }
