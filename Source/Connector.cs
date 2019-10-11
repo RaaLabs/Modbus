@@ -49,13 +49,13 @@ namespace Dolittle.TimeSeries.Modbus
             {
                 var bytes = _master.Read(register);
 
-                var bytesize = GetByteSizeFrom(register.DataType);
+                var byteSize = GetByteSizeFrom(register.DataType);
 
-                for (int i = 0; i < bytes.Length; i += bytesize)
+                for (var byteIndex = 0; byteIndex < bytes.Length; byteIndex += byteSize)
                 {
-                    var tag = $"{register.Unit}:{i / (bytesize/2) + (bytesize/2)}";
-                    byte[] bytebatch = bytes.Skip(i).Take(bytesize).ToArray();
-                    var payload = ConvertBytes(register.DataType, bytebatch);
+                    var tag = $"{register.Unit}:{register.StartingAddress + byteIndex / (byteSize / 2)}";
+                    var byteBatch = bytes.Skip(byteIndex).Take(byteSize).ToArray();
+                    var payload = ConvertBytes(register.DataType, byteBatch);
                     data.Add(new TagWithData(tag, payload));
                     _logger.Information($"Tag: {tag}, Value : {payload}");
                 }
