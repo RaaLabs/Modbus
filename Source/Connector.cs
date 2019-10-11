@@ -43,11 +43,14 @@ namespace Dolittle.TimeSeries.Modbus
             var data = new List<TagWithData>();
             foreach ((Tag tag, Register register) in _registers)
             {
-                var bytes = _master.Read(register);
-                var payload = ConvertBytes(register.DataType, bytes);
-                _logger.Information($"Value : {payload}");
+                _master.Read(register).ContinueWith(result =>
+                {
+                    var bytes = result.Result;
+                    var payload = ConvertBytes(register.DataType, bytes);
+                    _logger.Information($"Value : {payload}");
 
-                data.Add(new TagWithData(tag, payload));
+                    data.Add(new TagWithData(tag, payload));
+                }).Wait();
             }
 
             return data;
