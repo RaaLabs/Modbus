@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Dolittle.Logging;
 using Dolittle.TimeSeries.Modules.Connectors;
 
@@ -34,20 +35,30 @@ namespace Dolittle.TimeSeries.Modbus
             _master = master;
         }
 
+
         /// <inheritdoc/>
         public Source Name => "Modbus";
 
         /// <inheritdoc/>
+
         public IEnumerable<TagWithData> GetAllData()
         {
             var data = new List<TagWithData>();
-            foreach ((Tag tag, Register register) in _registers)
+
+            foreach (var register in _registers)
             {
                 var bytes = _master.Read(register);
-                var payload = ConvertBytes(register.DataType, bytes);
-                _logger.Information($"Value : {payload}");
 
-                data.Add(new TagWithData(tag, payload));
+                var bytesize = GetByteSizeFrom(register.DataType);
+
+                for (int i = 0; i < bytes.Length; i += bytesize)
+                {
+                    var tag = $"{register.Unit}:{i / (bytesize/2) + (bytesize/2)}";
+                    byte[] bytebatch = bytes.Skip(i).Take(bytesize).ToArray();
+                    var payload = ConvertBytes(register.DataType, bytebatch);
+                    data.Add(new TagWithData(tag, payload));
+                    _logger.Information($"Tag: {tag}, Value : {payload}");
+                }
             }
 
             return data;
@@ -57,6 +68,20 @@ namespace Dolittle.TimeSeries.Modbus
         public object GetData(Tag tag)
         {
             return new Measurement<Int32> { Value = 0 };
+        }
+
+        ushort GetByteSizeFrom(DataType type)
+        {
+            switch (type)
+            {
+                case DataType.Int32:
+                    return 4;
+                case DataType.Uint32:
+                    return 4;
+                case DataType.Float:
+                    return 4;
+            }
+            return 2;
         }
 
         object ConvertBytes(DataType type, byte[] bytes)

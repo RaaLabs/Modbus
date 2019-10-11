@@ -53,10 +53,12 @@ namespace Dolittle.TimeSeries.Modbus
         {
             MakeSureClientIsConnected();
 
-            _logger.Information($"Getting data from slave {register.Unit} register {register.StartingAddress} as DataType {Enum.GetName(typeof(DataType), register.DataType)}");
+            _logger.Information($"Getting data from slave {register.Unit} startingAdress {register.StartingAddress} size  {register.Size} as DataType {Enum.GetName(typeof(DataType), register.DataType)}");
 
             ushort[] result;
-            var size = GetDataSizeFrom(register.DataType);
+
+            ushort size = Convert.ToUInt16(register.Size * GetDataSizeFrom(register.DataType));
+
 
             switch (register.FunctionCode)
             {
@@ -70,7 +72,6 @@ namespace Dolittle.TimeSeries.Modbus
                     result = new ushort[0];
                     break;
             }
-
 
             var bytes = result.GetBytes(_configuration.Endianness);
 
