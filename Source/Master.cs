@@ -60,7 +60,8 @@ namespace Dolittle.TimeSeries.Modbus
 
             var size = Convert.ToUInt16(register.Size * GetDataSizeFrom(register.DataType));
 
-
+            try
+            {
             switch (register.FunctionCode)
             {
                 case FunctionCode.HoldingRegister:
@@ -75,9 +76,15 @@ namespace Dolittle.TimeSeries.Modbus
             }
 
             var bytes = result.GetBytes(_configuration.Endianness);
-
-
             return bytes;
+                
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, $"Trouble reading register {register}");
+                return null;
+            }
+
 
 
 

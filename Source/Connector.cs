@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Dolittle.Logging;
 using Dolittle.TimeSeries.Modules.Connectors;
 
@@ -18,6 +19,8 @@ namespace Dolittle.TimeSeries.Modbus
         readonly RegistersConfiguration _registers;
         readonly IMaster _master;
         readonly ILogger _logger;
+
+        static SemaphoreSlim _lock = new SemaphoreSlim(1);
 
         /// <summary>
         /// Initializes a new instance of <see cref="Connector"/>
@@ -43,13 +46,15 @@ namespace Dolittle.TimeSeries.Modbus
 
         public IEnumerable<TagWithData> GetAllData()
         {
+            _lock.Wait();
+            Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!! LOCK !!!!!!!!!!!!!!!!!!!!!!!!!!!");
             var data = new List<TagWithData>();
 
             foreach (var register in _registers)
             {
-                var bytes = _master.Read(register);
                  _master.Read(register).ContinueWith(result =>
                  {
+                    var bytes = result.Result;//_master.Read(register);
                     var byteSize = GetByteSizeFrom(register.DataType);
 
                     for (var byteIndex = 0; byteIndex < bytes.Length; byteIndex += byteSize)
@@ -62,8 +67,9 @@ namespace Dolittle.TimeSeries.Modbus
                     }
 
                  }).Wait();
-                 }
-
+            }
+            Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!! RELEASE !!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            _lock.Release();            
             return data;
         }
 
