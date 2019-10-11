@@ -47,6 +47,7 @@ namespace Dolittle.TimeSeries.Modbus
 
             foreach (var register in _registers)
             {
+<<<<<<< HEAD
                 var bytes = _master.Read(register);
 
                 var byteSize = GetByteSizeFrom(register.DataType);
@@ -59,6 +60,9 @@ namespace Dolittle.TimeSeries.Modbus
                     data.Add(new TagWithData(tag, payload));
                     _logger.Information($"Tag: {tag}, Value : {payload}");
                 }
+=======
+
+>>>>>>> f139be2206d105ba2051f4904c19bc76a6078892
             }
 
             return data;

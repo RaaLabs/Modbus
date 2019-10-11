@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 using System;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using Dolittle.Collections;
 using Dolittle.Lifecycle;
 using Dolittle.Logging;
@@ -49,7 +50,7 @@ namespace Dolittle.TimeSeries.Modbus
         }
 
         /// <inheritdoc/>
-        public byte[] Read(Register register)
+        public async Task<byte[]> Read(Register register)
         {
             MakeSureClientIsConnected();
 
@@ -63,10 +64,10 @@ namespace Dolittle.TimeSeries.Modbus
             switch (register.FunctionCode)
             {
                 case FunctionCode.HoldingRegister:
-                    result = _master.ReadHoldingRegisters(register.Unit, register.StartingAddress, size);
+                    result = await _master.ReadHoldingRegistersAsync(register.Unit, register.StartingAddress, size);
                     break;
                 case FunctionCode.InputRegister:
-                    result = _master.ReadInputRegisters(register.Unit, register.StartingAddress, size);
+                    result = await _master.ReadInputRegistersAsync(register.Unit, register.StartingAddress, size);
                     break;
                 default:
                     result = new ushort[0];
