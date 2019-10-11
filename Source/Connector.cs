@@ -47,23 +47,22 @@ namespace Dolittle.TimeSeries.Modbus
 
             foreach (var register in _registers)
             {
-<<<<<<< HEAD
                 var bytes = _master.Read(register);
+                 _master.Read(register).ContinueWith(result =>
+                 {
+                    var byteSize = GetByteSizeFrom(register.DataType);
 
-                var byteSize = GetByteSizeFrom(register.DataType);
+                    for (var byteIndex = 0; byteIndex < bytes.Length; byteIndex += byteSize)
+                    {
+                        var tag = $"{register.Unit}:{register.StartingAddress + byteIndex / (byteSize / 2)}";
+                        var byteBatch = bytes.Skip(byteIndex).Take(byteSize).ToArray();
+                        var payload = ConvertBytes(register.DataType, byteBatch);
+                        data.Add(new TagWithData(tag, payload));
+                        _logger.Information($"Tag: {tag}, Value : {payload}");
+                    }
 
-                for (var byteIndex = 0; byteIndex < bytes.Length; byteIndex += byteSize)
-                {
-                    var tag = $"{register.Unit}:{register.StartingAddress + byteIndex / (byteSize / 2)}";
-                    var byteBatch = bytes.Skip(byteIndex).Take(byteSize).ToArray();
-                    var payload = ConvertBytes(register.DataType, byteBatch);
-                    data.Add(new TagWithData(tag, payload));
-                    _logger.Information($"Tag: {tag}, Value : {payload}");
-                }
-=======
-
->>>>>>> f139be2206d105ba2051f4904c19bc76a6078892
-            }
+                 }).Wait();
+                 }
 
             return data;
         }
