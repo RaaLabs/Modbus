@@ -37,5 +37,11 @@ namespace Dolittle.TimeSeries.Modbus
         /// The <see cref="FunctionCode"/> to use for the read
         /// </summary>
         public FunctionCode FunctionCode { get; set; }
+
+        /// <summary>
+        /// The <see cref="Size"/> to use for the read
+        /// </summary>
+        public ushort Size { get; set; }
+
     }
 }

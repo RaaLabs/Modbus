@@ -14,14 +14,14 @@ namespace Dolittle.TimeSeries.Modbus
     /// </summary>
     [Name("registers")]
     public class RegistersConfiguration :
-        ReadOnlyDictionary<Tag, Register>,
+        ReadOnlyCollection<Register>,
         IConfigurationObject
     {
         /// <summary>
         /// Initializes a new instance of <see cref="RegistersConfiguration"/>
         /// </summary>
-        /// <param name="tagsToRegisters">The mapping between all <see cref="Tag">tags</see></param> and <see cref="Register">registers</see>
-        public RegistersConfiguration(IDictionary<Tag, Register> tagsToRegisters) : base(tagsToRegisters)
+        /// <param name="registers">The mapping between all </param> and <see cref="Register">registers</see>
+        public RegistersConfiguration(IList<Register> registers) : base(registers)
         {
         }
     }

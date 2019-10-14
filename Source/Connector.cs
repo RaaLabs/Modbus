@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Dolittle.Logging;
 using Dolittle.TimeSeries.Modules.Connectors;
 
@@ -34,25 +35,34 @@ namespace Dolittle.TimeSeries.Modbus
             _master = master;
         }
 
+
         /// <inheritdoc/>
         public Source Name => "Modbus";
 
         /// <inheritdoc/>
+
         public IEnumerable<TagWithData> GetAllData()
         {
             var data = new List<TagWithData>();
-            foreach ((Tag tag, Register register) in _registers)
+
+            foreach (var register in _registers)
             {
                 _master.Read(register).ContinueWith(result =>
                 {
                     var bytes = result.Result;
-                    var payload = ConvertBytes(register.DataType, bytes);
-                    _logger.Information($"Value : {payload}");
+                    var byteSize = GetByteSizeFrom(register.DataType);
 
-                    data.Add(new TagWithData(tag, payload));
+                    for (var byteIndex = 0; byteIndex < bytes.Length; byteIndex += byteSize)
+                    {
+                        var tag = $"{register.Unit}:{register.StartingAddress + byteIndex / (byteSize / 2)}";
+                        var byteBatch = bytes.Skip(byteIndex).Take(byteSize).ToArray();
+                        var payload = ConvertBytes(register.DataType, byteBatch);
+                        data.Add(new TagWithData(tag, payload));
+                        _logger.Information($"Tag: {tag}, Value : {payload}");
+                    }
+
                 }).Wait();
             }
-
             return data;
         }
 
@@ -60,6 +70,20 @@ namespace Dolittle.TimeSeries.Modbus
         public object GetData(Tag tag)
         {
             return new Measurement<Int32> { Value = 0 };
+        }
+
+        ushort GetByteSizeFrom(DataType type)
+        {
+            switch (type)
+            {
+                case DataType.Int32:
+                    return 4;
+                case DataType.Uint32:
+                    return 4;
+                case DataType.Float:
+                    return 4;
+            }
+            return 2;
         }
 
         object ConvertBytes(DataType type, byte[] bytes)
