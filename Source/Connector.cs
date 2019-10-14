@@ -6,7 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Dolittle.Logging;
-using Dolittle.TimeSeries.Modules.Connectors;
+using Dolittle.TimeSeries.DataPoints;
+using Dolittle.TimeSeries.Connectors;
+using System.Threading.Tasks;
 
 namespace Dolittle.TimeSeries.Modbus
 {
@@ -40,16 +42,15 @@ namespace Dolittle.TimeSeries.Modbus
         public Source Name => "Modbus";
 
         /// <inheritdoc/>
-
-        public IEnumerable<TagWithData> GetAllData()
+        public async Task<IEnumerable<TagDataPoint>> Pull(IEnumerable<Tag> tags)
         {
-            var data = new List<TagWithData>();
-
-            foreach (var register in _registers)
+            var data = new List<TagDataPoint>();
+            try
             {
-                _master.Read(register).ContinueWith(result =>
+
+                foreach (var register in _registers)
                 {
-                    var bytes = result.Result;
+                    var bytes = await _master.Read(register);
                     var byteSize = GetByteSizeFrom(register.DataType);
 
                     for (var byteIndex = 0; byteIndex < bytes.Length; byteIndex += byteSize)
@@ -57,19 +58,15 @@ namespace Dolittle.TimeSeries.Modbus
                         var tag = $"{register.Unit}:{register.StartingAddress + byteIndex / (byteSize / 2)}";
                         var byteBatch = bytes.Skip(byteIndex).Take(byteSize).ToArray();
                         var payload = ConvertBytes(register.DataType, byteBatch);
-                        data.Add(new TagWithData(tag, payload));
+                        data.Add(new TagDataPoint(tag, (Measurement)payload));
                         _logger.Information($"Tag: {tag}, Value : {payload}");
                     }
-
-                }).Wait();
+                }
+            } catch( Exception ex )
+            {
+                _logger.Error(ex, "Error when pulling data from slave");
             }
             return data;
-        }
-
-        /// <inheritdoc/>
-        public object GetData(Tag tag)
-        {
-            return new Measurement<Int32> { Value = 0 };
         }
 
         ushort GetByteSizeFrom(DataType type)
@@ -86,7 +83,7 @@ namespace Dolittle.TimeSeries.Modbus
             return 2;
         }
 
-        object ConvertBytes(DataType type, byte[] bytes)
+        double ConvertBytes(DataType type, byte[] bytes)
         {
             switch (type)
             {

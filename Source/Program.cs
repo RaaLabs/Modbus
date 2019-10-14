@@ -2,15 +2,16 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-using Dolittle.TimeSeries.Modules.Booting;
+using System.Threading.Tasks;
+using Dolittle.Clients;
 
 namespace Dolittle.TimeSeries.Modbus
 {
     class Program
     {
-        static void Main()
+        static async Task Main(string[] args)
         {
-            Bootloader.Configure(_ => { }).Start().Wait();
+            await Bootloader.Start();
         }
     }
 }

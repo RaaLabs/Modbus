@@ -14,8 +14,7 @@
     
 
     <ItemGroup>
-        <PackageReference Include="Dolittle.TimeSeries.Modules.Connectors" Version="6.*" />
-        <PackageReference Include="Dolittle.TimeSeries.Modules.IoTEdge" Version="6.*" />
+        <PackageReference Include="Dolittle.TimeSeries.Connectors" Version="1.*" />
         <PackageReference Include="nmodbus" Version="3.0.58" />
     </ItemGroup>
 </Project>

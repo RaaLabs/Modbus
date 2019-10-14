@@ -5,7 +5,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Dolittle.Configuration;
-using Dolittle.TimeSeries.Modules;
 
 namespace Dolittle.TimeSeries.Modbus
 {
