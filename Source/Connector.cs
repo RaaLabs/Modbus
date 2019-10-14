@@ -5,10 +5,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Dolittle.Logging;
 using Dolittle.TimeSeries.DataPoints;
 using Dolittle.TimeSeries.Connectors;
-using System.Threading.Tasks;
+using Dolittle.TimeSeries.DataTypes;
 
 namespace Dolittle.TimeSeries.Modbus
 {
@@ -42,7 +43,7 @@ namespace Dolittle.TimeSeries.Modbus
         public Source Name => "Modbus";
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<TagDataPoint>> Pull(IEnumerable<Tag> tags)
+        public async Task<IEnumerable<TagDataPoint>> Pull()
         {
             var data = new List<TagDataPoint>();
             try
@@ -62,7 +63,8 @@ namespace Dolittle.TimeSeries.Modbus
                         _logger.Information($"Tag: {tag}, Value : {payload}");
                     }
                 }
-            } catch( Exception ex )
+            }
+            catch (Exception ex)
             {
                 _logger.Error(ex, "Error when pulling data from slave");
             }
