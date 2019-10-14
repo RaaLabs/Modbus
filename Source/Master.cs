@@ -62,32 +62,27 @@ namespace Dolittle.TimeSeries.Modbus
 
             try
             {
-            switch (register.FunctionCode)
-            {
-                case FunctionCode.HoldingRegister:
-                    result = await _master.ReadHoldingRegistersAsync(register.Unit, register.StartingAddress, size);
-                    break;
-                case FunctionCode.InputRegister:
-                    result = await _master.ReadInputRegistersAsync(register.Unit, register.StartingAddress, size);
-                    break;
-                default:
-                    result = new ushort[0];
-                    break;
-            }
+                switch (register.FunctionCode)
+                {
+                    case FunctionCode.HoldingRegister:
+                        result = await _master.ReadHoldingRegistersAsync(register.Unit, register.StartingAddress, size);
+                        break;
+                    case FunctionCode.InputRegister:
+                        result = await _master.ReadInputRegistersAsync(register.Unit, register.StartingAddress, size);
+                        break;
+                    default:
+                        result = new ushort[0];
+                        break;
+                }
+                var bytes = result.GetBytes(_configuration.Endianness);
+                return bytes;
 
-            var bytes = result.GetBytes(_configuration.Endianness);
-            return bytes;
-                
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, $"Trouble reading register {register}");
                 return null;
             }
-
-
-
-
         }
 
         ushort GetDataSizeFrom(DataType type)
