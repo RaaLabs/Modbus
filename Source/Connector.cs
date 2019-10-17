@@ -16,6 +16,7 @@ namespace Dolittle.TimeSeries.Modbus
     public class Connector : IAmAPullConnector
     {
         readonly RegistersConfiguration _registers;
+        readonly ConnectorConfiguration _configuration;
         readonly IMaster _master;
         readonly ILogger _logger;
 
@@ -23,14 +24,17 @@ namespace Dolittle.TimeSeries.Modbus
         /// Initializes a new instance of <see cref="Connector"/>
         /// </summary>
         /// <param name="registers">The <see cref="RegistersConfiguration">configured registers</see></param>
+        /// <param name="configuration"><see cref="ConnectorConfiguration">Configuration</see></param>
         /// <param name="master">The <see cref="IMaster"/></param>
         /// <param name="logger"><see cref="ILogger"/> for logging</param>
         public Connector(
             RegistersConfiguration registers,
+            ConnectorConfiguration configuration,
             IMaster master,
             ILogger logger)
         {
             _registers = registers;
+            _configuration = configuration;
             _logger = logger;
             _master = master;
         }
@@ -45,6 +49,8 @@ namespace Dolittle.TimeSeries.Modbus
         {
             var data = new List<TagWithData>();
 
+            var swapWords = _configuration.Endianness.ShouldSwapWords();
+
             foreach (var register in _registers)
             {
                 _master.Read(register).ContinueWith(result =>
@@ -52,6 +58,15 @@ namespace Dolittle.TimeSeries.Modbus
                     var bytes = result.Result;
                     var byteSize = GetByteSizeFrom(register.DataType);
 
+                    if (swapWords)
+                    {
+                        var tempBytes = new List<byte>();
+                        for (var byteIndex = bytes.Length; byteIndex >= 0; byteIndex -= byteSize)
+                        {
+                            tempBytes.AddRange(bytes.Skip(byteIndex).Take(byteSize).ToArray());
+                        }
+                        bytes = tempBytes.ToArray();
+                    }
                     for (var byteIndex = 0; byteIndex < bytes.Length; byteIndex += byteSize)
                     {
                         var tag = $"{register.Unit}:{register.StartingAddress + byteIndex / (byteSize / 2)}";
@@ -71,7 +86,6 @@ namespace Dolittle.TimeSeries.Modbus
         {
             return new Measurement<Int32> { Value = 0 };
         }
-
         ushort GetByteSizeFrom(DataType type)
         {
             switch (type)
