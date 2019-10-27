@@ -5,13 +5,7 @@
         <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp2.1</TargetFramework>
         <AssemblyName>Dolittle.TimeSeries.Modbus</AssemblyName>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
-
-    <ItemGroup>
-        <ProjectCapability Include="AzureIoTEdgeModule" />
-    </ItemGroup>
-    
 
     <ItemGroup>
         <PackageReference Include="Dolittle.TimeSeries.Connectors" Version="1.*" />

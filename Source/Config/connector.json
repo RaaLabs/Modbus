@@ -1,0 +1,7 @@
+{
+    "ip": "192.168.200.10",
+    "port": "502",
+    "useASCII": false,
+    "endianness": 3,
+    "protocol": 1
+}

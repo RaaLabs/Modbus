@@ -1,6 +1,0 @@
-{
-    "Modbus": {
-        "interval": "1000",
-        "tags": []
-    }
-}

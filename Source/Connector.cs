@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Dolittle.Logging;
 using Dolittle.TimeSeries.DataPoints;
 using Dolittle.TimeSeries.Connectors;
-using Dolittle.TimeSeries.DataTypes;
+using Single = Dolittle.TimeSeries.DataTypes.Single;
 
 namespace Dolittle.TimeSeries.Modbus
 {
@@ -38,7 +38,6 @@ namespace Dolittle.TimeSeries.Modbus
             _master = master;
         }
 
-
         /// <inheritdoc/>
         public Source Name => "Modbus";
 
@@ -48,7 +47,6 @@ namespace Dolittle.TimeSeries.Modbus
             var data = new List<TagDataPoint>();
             try
             {
-
                 foreach (var register in _registers)
                 {
                     var bytes = await _master.Read(register);
@@ -59,7 +57,7 @@ namespace Dolittle.TimeSeries.Modbus
                         var tag = $"{register.Unit}:{register.StartingAddress + byteIndex / (byteSize / 2)}";
                         var byteBatch = bytes.Skip(byteIndex).Take(byteSize).ToArray();
                         var payload = ConvertBytes(register.DataType, byteBatch);
-                        data.Add(new TagDataPoint(tag, (Measurement)payload));
+                        data.Add(new TagDataPoint(tag, payload));
                         _logger.Information($"Tag: {tag}, Value : {payload}");
                     }
                 }
@@ -85,18 +83,22 @@ namespace Dolittle.TimeSeries.Modbus
             return 2;
         }
 
-        double ConvertBytes(DataType type, byte[] bytes)
+        Single ConvertBytes(DataType type, byte[] bytes)
         {
+            var single = new Single();
             switch (type)
             {
                 case DataType.Int32:
-                    return BitConverter.ToInt32(bytes);
+                    single.Value = (double)BitConverter.ToInt32(bytes);
+                    break;
                 case DataType.Uint32:
-                    return BitConverter.ToUInt32(bytes);
+                    single.Value = (double)BitConverter.ToUInt32(bytes);
+                    break;
                 case DataType.Float:
-                    return BitConverter.ToSingle(bytes);
+                    single.Value = BitConverter.ToSingle(bytes);
+                    break;
             }
-            return 0;
+            return single;
         }
     }
 }
