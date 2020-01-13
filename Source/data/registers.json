@@ -1,16 +1,10 @@
 [
     {
-        "unit": 2,
-        "startingAddress": 2,
-        "dataType": 3,
-        "functionCode": 4,
-        "size": 4
-    },
-    {
-        "unit": 11,
-        "startingAddress": 2,
-        "dataType": 3,
-        "functionCode": 4,
-        "size": 4
+        "unit": 1,
+        "startingAddress": 3,
+        "dataType": 4,
+        "functionCode": 2,
+        "size": 2
     }
-]
+    ]
+    

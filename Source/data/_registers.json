@@ -1,0 +1,24 @@
+[
+    {
+        "unit": 1,
+        "startingAddress": 342,
+        "dataType": 3,
+        "functionCode": 2,
+        "size": 1
+    },
+    {
+        "unit": 1,
+        "startingAddress": 343,
+        "dataType": 3,
+        "functionCode": 2,
+        "size": 1
+    },
+    {
+        "unit": 1,
+        "startingAddress": 344,
+        "dataType": 3,
+        "functionCode": 2,
+        "size": 1
+    }
+
+]
