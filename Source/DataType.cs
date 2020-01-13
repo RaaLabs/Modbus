@@ -23,6 +23,11 @@ namespace Dolittle.TimeSeries.Modbus
         /// <summary>
         /// IEEE 754 floating point; https://en.m.wikipedia.org/wiki/IEEE_754
         /// </summary>
-        Float
+        Float,
+
+        /// <summary>
+        /// 16 bit integer
+        /// </summary>
+        Int16
     }
 }

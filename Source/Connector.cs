@@ -110,6 +110,8 @@ namespace Dolittle.TimeSeries.Modbus
                     return BitConverter.ToUInt32(bytes);
                 case DataType.Float:
                     return BitConverter.ToSingle(bytes);
+                case DataType.Int16:
+                    return BitConverter.ToInt16(bytes);
             }
             return 0;
         }
