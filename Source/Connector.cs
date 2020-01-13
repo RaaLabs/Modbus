@@ -67,15 +67,15 @@ namespace Dolittle.TimeSeries.Modbus
                         }
                         bytes = tempBytes.ToArray();
                     }
-                    for (var byteIndex = 0; byteIndex < bytes.Length; byteIndex += byteSize)
+                    var convertedDataPoints = bytes.Select((s, i) => ConvertBytes(register.DataType, bytes.Skip(i * byteSize).Take(byteSize).ToArray()));
+                    var tagsWithData = convertedDataPoints.Select((payload, i) =>
                     {
-                        var tag = $"{register.Unit}:{register.StartingAddress + byteIndex / (byteSize / 2)}";
-                        var byteBatch = bytes.Skip(byteIndex).Take(byteSize).ToArray();
-                        var payload = ConvertBytes(register.DataType, byteBatch);
-                        data.Add(new TagWithData(tag, payload));
+                        var tag = $"{register.Unit}:{register.StartingAddress + i * (byteSize / 2)}";
                         _logger.Information($"Tag: {tag}, Value : {payload}");
-                    }
+                        return new TagWithData(tag, payload);
+                    });
 
+                    data.AddRange(tagsWithData);
                 }).Wait();
             }
             return data;
