@@ -23,7 +23,7 @@ ARG CONFIGURATION
 
 VOLUME [ "/app/data" ]
 
-COPY Build/MSBuild/* ./Build/MSBuild/
+COPY default.props ./default.props
 COPY Source/*.csproj ./Source/
 
 WORKDIR /app/Source/
@@ -38,6 +38,5 @@ FROM base
 
 WORKDIR /app
 COPY --from=build-env /app/Source/out ./
-COPY --from=build-env /app/Source/data ./data
 
-ENTRYPOINT ["dotnet", "Dolittle.TimeSeries.Modbus.dll"]
+ENTRYPOINT ["dotnet", "RaaLabs.TimeSeries.Modbus.dll"]

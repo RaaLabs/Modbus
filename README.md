@@ -58,7 +58,7 @@ In your `deployment.json` file, you will need to add the module. For more detail
 
 ```json
 "modules": {
-    "Dolittle.TimeSeries.Modbus": {
+    "RaaLabs.TimeSeries.Modbus": {
     "version": "1.0",
     "type": "docker",
     "status": "running",

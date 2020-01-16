@@ -1,8 +1,12 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) RaaLabs. All rights reserved.
+ *  Licensed under the MIT License. See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Dolittle.TimeSeries.Modbus
+namespace RaaLabs.TimeSeries.Modbus
 {
     /// <summary>
     /// Defines extension functions to interpret bytes

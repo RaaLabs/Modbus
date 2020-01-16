@@ -1,6 +1,6 @@
 using Machine.Specifications;
 
-namespace Dolittle.TimeSeries.Modbus.Specifications.for_ByteExtensions
+namespace RaaLabs.TimeSeries.Modbus.Specifications.for_ByteExtensions
 {
     public class when_converting_from_bytes_to_tags_with_data
     {
