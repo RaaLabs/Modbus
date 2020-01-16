@@ -49,7 +49,7 @@ namespace Dolittle.TimeSeries.Modbus
         {
             var data = new List<TagWithData>();
 
-            var swapWords = _configuration.Endianness.ShouldSwapWords();
+            var reverseDatapoints = _configuration.Endianness.ShouldSwapWords();
 
             foreach (var register in _registers)
             {
@@ -57,7 +57,7 @@ namespace Dolittle.TimeSeries.Modbus
                 {
                     var bytes = result.Result;
 
-                    TagWithData[] tagsWithData = bytes.ToTagsWithData(register);
+                    TagWithData[] tagsWithData = bytes.ToTagsWithData(register, reverseDatapoints);
 
                     foreach (TagWithData tagWithData in tagsWithData)
                     {
