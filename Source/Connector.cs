@@ -6,8 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Dolittle.Logging;
-using Dolittle.TimeSeries.Modules;
-using Dolittle.TimeSeries.Modules.Connectors;
+using RaaLabs.TimeSeries.Modules;
+using RaaLabs.TimeSeries.Modules.Connectors;
 
 namespace RaaLabs.TimeSeries.Modbus
 {
