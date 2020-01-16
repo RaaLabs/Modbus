@@ -14,22 +14,32 @@ namespace Dolittle.TimeSeries.Modbus
         /// </summary>
         /// <param name="bytes">Array of <see cref="byte">. Expected to be little endian.</see></param>
         /// <param name="register">Register information <see cref="Register">register</see></param>
+        /// <param name="reverseDatapoints">Is set if the data points should come in reversed order</param>
         /// <returns>Array of <see cref="TagWithData"/></returns>
-        public static TagWithData[] ToTagsWithData(this byte[] bytes, Register register)
+        public static TagWithData[] ToTagsWithData(this byte[] bytes, Register register, bool reverseDatapoints)
         {
-            var byteSize = GetByteSizeFrom(register.DataType);
+            var datapointSize = GetDatapointSizeFrom(register.DataType);
 
-            var convertedDataPoints = bytes.Chunk(byteSize).Select(data => ConvertBytes(register.DataType, data.ToArray()));
+            if (reverseDatapoints)
+            {
+                var tempBytes = new List<byte>();
+                for (var byteIndex = bytes.Length; byteIndex >= 0; byteIndex -= datapointSize)
+                {
+                    tempBytes.AddRange(bytes.Skip(byteIndex).Take(datapointSize).ToArray());
+                }
+                bytes = tempBytes.ToArray();
+            }
+            var convertedDataPoints = bytes.Chunk(datapointSize).Select(data => ConvertBytes(register.DataType, data.ToArray()));
             var tagsWithData = convertedDataPoints.Select((payload, index) =>
             {
-                var tag = $"{register.Unit}:{register.StartingAddress + index * (byteSize / 2)}";
+                var tag = $"{register.Unit}:{register.StartingAddress + index * (datapointSize / 2)}";
                 return new TagWithData(tag, payload);
             });
 
             return tagsWithData.ToArray();
         }
 
-        static ushort GetByteSizeFrom(DataType type)
+        static ushort GetDatapointSizeFrom(DataType type)
         {
             switch (type)
             {
