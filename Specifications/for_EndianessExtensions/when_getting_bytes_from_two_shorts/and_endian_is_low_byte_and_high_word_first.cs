@@ -1,11 +1,11 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) Dolittle. All rights reserved.
+ *  Copyright (c) RaaLabs. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 using System;
 using Machine.Specifications;
 
-namespace Dolittle.TimeSeries.Modbus.Specifications.for_EndianessExtensions.when_getting_bytes_from_two_shorts
+namespace RaaLabs.TimeSeries.Modbus.Specifications.for_EndianessExtensions.when_getting_bytes_from_two_shorts
 {
     public class and_endian_is_low_byte_and_high_word_first
     {

@@ -34,7 +34,7 @@
         "name": "IdentityMapper Local Debug (.NET Core)",
         "type": "coreclr",
         "request": "launch",
-        "program": "${workspaceRoot}/Source/bin/Debug/netcoreapp2.1/Dolittle.TimeSeries.Modbus.dll",
+        "program": "${workspaceRoot}/Source/bin/Debug/netcoreapp2.1/RaaLabs.TimeSeries.Modbus.dll",
         "args": [],
         "cwd": "${workspaceRoot}/Source",
         "internalConsoleOptions": "openOnSessionStart",

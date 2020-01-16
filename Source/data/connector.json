@@ -3,5 +3,5 @@
     "port": "1337",
     "useASCII": false,
     "endianness": 3,
-    "protocol": 1
+    "protocol": 2
 }
