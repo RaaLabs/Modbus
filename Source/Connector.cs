@@ -57,7 +57,7 @@ namespace Dolittle.TimeSeries.Modbus
                 {
                     var bytes = result.Result;
 
-                    TagWithData[] tagsWithData = bytes.ToTagsWithData(register);
+                    TagWithData[] tagsWithData = bytes.ToTagsWithData(register, swapWords);
 
                     foreach (TagWithData tagWithData in tagsWithData)
                     {
