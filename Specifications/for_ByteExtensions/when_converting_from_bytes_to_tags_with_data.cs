@@ -39,6 +39,10 @@ namespace RaaLabs.TimeSeries.Modbus.Specifications.for_ByteExtensions
             twoFloatTags = input.ToTagsWithData(twoFloats, false);
             twoInt32Tags = input.ToTagsWithData(twoInt32s, false);
             fourInt16Tags = input.ToTagsWithData(fourInt16s, false);
+
+            twoFloatTagsReversedOrder = input.ToTagsWithData(twoFloats, true);
+            twoInt32TagsReversedOrder = input.ToTagsWithData(twoInt32s, true);
+            fourInt16TagsReversedOrder = input.ToTagsWithData(fourInt16s, true);
         };
 
         It should_have_the_correct_addresses_and_values_for_twoFloatTags = () =>
@@ -49,6 +53,7 @@ namespace RaaLabs.TimeSeries.Modbus.Specifications.for_ByteExtensions
             twoFloatTags[0].Data.ShouldEqual(1234.56f);
             twoFloatTags[1].Data.ShouldEqual(133.3f);
         };
+
 
         It should_have_the_correct_addresses_and_values_for_twoInt32Tags = () =>
         {
@@ -72,6 +77,28 @@ namespace RaaLabs.TimeSeries.Modbus.Specifications.for_ByteExtensions
             fourInt16Tags[3].Data.ShouldEqual((short)0x4305);
         };
 
+        It should_have_the_correct_addresses_and_values_if_elements_are_in_reversed_order = () =>
+        {
+            twoFloatTagsReversedOrder[0].Tag.ShouldEqual<Tag>("1:1");
+            twoFloatTagsReversedOrder[1].Tag.ShouldEqual<Tag>("1:3");
+            twoFloatTagsReversedOrder[0].Data.ShouldEqual(133.3f);
+            twoFloatTagsReversedOrder[1].Data.ShouldEqual(1234.56f);
+
+            twoInt32TagsReversedOrder[0].Tag.ShouldEqual<Tag>("1:1");
+            twoInt32TagsReversedOrder[1].Tag.ShouldEqual<Tag>("1:3");
+            twoInt32TagsReversedOrder[0].Data.ShouldEqual(0x43054ccd);
+            twoInt32TagsReversedOrder[1].Data.ShouldEqual(0x449a51ec);
+
+            fourInt16TagsReversedOrder[0].Tag.ShouldEqual<Tag>("1:1");
+            fourInt16TagsReversedOrder[1].Tag.ShouldEqual<Tag>("1:2");
+            fourInt16TagsReversedOrder[2].Tag.ShouldEqual<Tag>("1:3");
+            fourInt16TagsReversedOrder[3].Tag.ShouldEqual<Tag>("1:4");
+            fourInt16TagsReversedOrder[0].Data.ShouldEqual((short)0x4305);
+            fourInt16TagsReversedOrder[1].Data.ShouldEqual((short)0x4ccd);
+            fourInt16TagsReversedOrder[2].Data.ShouldEqual((short)0x449a);
+            fourInt16TagsReversedOrder[3].Data.ShouldEqual((short)0x51ec);
+        };
+
         static byte[] input;
         static Register twoFloats;
         static Register twoInt32s;
@@ -80,5 +107,9 @@ namespace RaaLabs.TimeSeries.Modbus.Specifications.for_ByteExtensions
         static TagWithData[] twoFloatTags;
         static TagWithData[] twoInt32Tags;
         static TagWithData[] fourInt16Tags;
+
+        static TagWithData[] twoFloatTagsReversedOrder;
+        static TagWithData[] twoInt32TagsReversedOrder;
+        static TagWithData[] fourInt16TagsReversedOrder;
     }
 }
