@@ -6,14 +6,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Dolittle.Logging;
+using Dolittle.TimeSeries.Modules;
 using Dolittle.TimeSeries.Modules.Connectors;
 
 namespace Dolittle.TimeSeries.Modbus
 {
     /// <summary>
-    /// Represents a <see cref="IAmAPullConnector">pull connector</see> for Modbus
+    /// Represents a <see cref="IAmAStreamingConnector">streaming connector</see> for Modbus
     /// </summary>
-    public class Connector : IAmAPullConnector
+    public class Connector : IAmAStreamingConnector
     {
         readonly RegistersConfiguration _registers;
         readonly ConnectorConfiguration _configuration;
@@ -44,36 +45,32 @@ namespace Dolittle.TimeSeries.Modbus
         public Source Name => "Modbus";
 
         /// <inheritdoc/>
-
-        public IEnumerable<TagWithData> GetAllData()
-        {
-            var data = new List<TagWithData>();
-
-            var reverseDatapoints = _configuration.Endianness.ShouldSwapWords();
-
-            foreach (var register in _registers)
-            {
-                _master.Read(register).ContinueWith(result =>
-                {
-                    var bytes = result.Result;
-
-                    TagWithData[] tagsWithData = bytes.ToTagsWithData(register, reverseDatapoints);
-
-                    foreach (TagWithData tagWithData in tagsWithData)
-                    {
-                        _logger.Information($"Tag: {tagWithData.Tag}, Value : {tagWithData.Data}");
-                    }
-
-                    data.AddRange(tagsWithData);
-                }).Wait();
-            }
-            return data;
-        }
+        public event DataReceived DataReceived = (tag, ValueTask, timestamp) => { };
 
         /// <inheritdoc/>
-        public object GetData(Tag tag)
+        public void Connect()
         {
-            return new Measurement<Int32> { Value = 0 };
+            var reverseDatapoints = _configuration.Endianness.ShouldSwapWords();
+
+            while (true)
+            {
+                foreach (var register in _registers)
+                {
+                    _master.Read(register).ContinueWith(result =>
+                    {
+                        var bytes = result.Result;
+
+                        TagWithData[] tagsWithData = bytes.ToTagsWithData(register, reverseDatapoints);
+
+                        foreach (TagWithData tagWithData in tagsWithData)
+                        {
+                            DataReceived(tagWithData.Tag, tagWithData.Data, Timestamp.UtcNow);
+                            _logger.Information($"Tag: {tagWithData.Tag}, Value : {tagWithData.Data}");
+                        }
+
+                    }).Wait();
+                }
+            }
         }
     }
 }
