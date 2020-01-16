@@ -56,26 +56,15 @@ namespace Dolittle.TimeSeries.Modbus
                 _master.Read(register).ContinueWith(result =>
                 {
                     var bytes = result.Result;
-                    var byteSize = GetByteSizeFrom(register.DataType);
 
-                    if (swapWords)
+                    TagWithData[] tagsWithData = bytes.ToTagsWithData(register);
+
+                    foreach (TagWithData tagWithData in tagsWithData)
                     {
-                        var tempBytes = new List<byte>();
-                        for (var byteIndex = bytes.Length; byteIndex >= 0; byteIndex -= byteSize)
-                        {
-                            tempBytes.AddRange(bytes.Skip(byteIndex).Take(byteSize).ToArray());
-                        }
-                        bytes = tempBytes.ToArray();
-                    }
-                    for (var byteIndex = 0; byteIndex < bytes.Length; byteIndex += byteSize)
-                    {
-                        var tag = $"{register.Unit}:{register.StartingAddress + byteIndex / (byteSize / 2)}";
-                        var byteBatch = bytes.Skip(byteIndex).Take(byteSize).ToArray();
-                        var payload = ConvertBytes(register.DataType, byteBatch);
-                        data.Add(new TagWithData(tag, payload));
-                        _logger.Information($"Tag: {tag}, Value : {payload}");
+                        _logger.Information($"Tag: {tagWithData.Tag}, Value : {tagWithData.Data}");
                     }
 
+                    data.AddRange(tagsWithData);
                 }).Wait();
             }
             return data;
@@ -85,33 +74,6 @@ namespace Dolittle.TimeSeries.Modbus
         public object GetData(Tag tag)
         {
             return new Measurement<Int32> { Value = 0 };
-        }
-        ushort GetByteSizeFrom(DataType type)
-        {
-            switch (type)
-            {
-                case DataType.Int32:
-                    return 4;
-                case DataType.Uint32:
-                    return 4;
-                case DataType.Float:
-                    return 4;
-            }
-            return 2;
-        }
-
-        object ConvertBytes(DataType type, byte[] bytes)
-        {
-            switch (type)
-            {
-                case DataType.Int32:
-                    return BitConverter.ToInt32(bytes);
-                case DataType.Uint32:
-                    return BitConverter.ToUInt32(bytes);
-                case DataType.Float:
-                    return BitConverter.ToSingle(bytes);
-            }
-            return 0;
         }
     }
 }
