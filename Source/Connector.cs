@@ -5,6 +5,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Diagnostics;
 using Dolittle.Logging;
 using RaaLabs.TimeSeries.Modules;
 using RaaLabs.TimeSeries.Modules.Connectors;
@@ -18,6 +20,7 @@ namespace RaaLabs.TimeSeries.Modbus
     {
         readonly RegistersConfiguration _registers;
         readonly ConnectorConfiguration _configuration;
+        readonly StreamingConnectorConfiguration _streamingConnectorConfiguration;
         readonly IMaster _master;
         readonly ILogger _logger;
 
@@ -26,16 +29,19 @@ namespace RaaLabs.TimeSeries.Modbus
         /// </summary>
         /// <param name="registers">The <see cref="RegistersConfiguration">configured registers</see></param>
         /// <param name="configuration"><see cref="ConnectorConfiguration">Configuration</see></param>
+        /// <param name="streamingConnectorConfiguration"><see cref="StreamingConnectorConfiguration">StreamingConnectorConfiguration</see></param>
         /// <param name="master">The <see cref="IMaster"/></param>
         /// <param name="logger"><see cref="ILogger"/> for logging</param>
         public Connector(
             RegistersConfiguration registers,
             ConnectorConfiguration configuration,
+            StreamingConnectorConfiguration streamingConnectorConfiguration,
             IMaster master,
             ILogger logger)
         {
             _registers = registers;
             _configuration = configuration;
+            _streamingConnectorConfiguration = streamingConnectorConfiguration;
             _logger = logger;
             _master = master;
         }
@@ -51,9 +57,12 @@ namespace RaaLabs.TimeSeries.Modbus
         public void Connect()
         {
             var reverseDatapoints = _configuration.Endianness.ShouldSwapWords();
+            var interval = _streamingConnectorConfiguration.Modbus.Interval;
 
             while (true)
             {
+                var timer = new Stopwatch();
+                timer.Start();
                 foreach (var register in _registers)
                 {
                     _master.Read(register).ContinueWith(result =>
@@ -69,6 +78,13 @@ namespace RaaLabs.TimeSeries.Modbus
                         }
 
                     }).Wait();
+                }
+
+                timer.Stop();
+                int elapsed = (int)timer.ElapsedMilliseconds;
+                if (elapsed < interval)
+                {
+                    Task.Delay(interval - elapsed).Wait();
                 }
             }
         }
