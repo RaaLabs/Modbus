@@ -5,6 +5,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Diagnostics;
 using Dolittle.Logging;
 using RaaLabs.TimeSeries.Modules;
 using RaaLabs.TimeSeries.Modules.Connectors;
@@ -51,9 +53,12 @@ namespace RaaLabs.TimeSeries.Modbus
         public void Connect()
         {
             var reverseDatapoints = _configuration.Endianness.ShouldSwapWords();
+            var interval = _configuration.Interval;
 
             while (true)
             {
+                var timer = new Stopwatch();
+                timer.Start();
                 foreach (var register in _registers)
                 {
                     _master.Read(register).ContinueWith(result =>
@@ -69,6 +74,13 @@ namespace RaaLabs.TimeSeries.Modbus
                         }
 
                     }).Wait();
+                }
+
+                timer.Stop();
+                int elapsed = (int)timer.ElapsedMilliseconds;
+                if (elapsed < interval)
+                {
+                    Task.Delay(interval - elapsed).Wait();
                 }
             }
         }
