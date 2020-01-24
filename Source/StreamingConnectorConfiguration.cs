@@ -23,7 +23,7 @@ namespace RaaLabs.TimeSeries.Modbus
         }
 
         /// <summary>
-        /// 
+        /// Object holding modbus-specific configuration.
         /// </summary>
         public ModbusConfiguration Modbus { get; }
 
@@ -33,7 +33,7 @@ namespace RaaLabs.TimeSeries.Modbus
         public class ModbusConfiguration
         {
             /// <summary>
-            /// 
+            /// The polling interval for the connector.
             /// </summary>
             public int Interval { get; set; }
         }
