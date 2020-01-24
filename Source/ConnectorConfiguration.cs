@@ -21,13 +21,15 @@ namespace RaaLabs.TimeSeries.Modbus
         /// <param name="endianness"><see cref="Endianness"/> to expect from the master</param>
         /// <param name="protocol"><see cref="Protocol"/> to use for connecting</param>
         /// <param name="useASCII">Use ASCII transport</param>
-        public ConnectorConfiguration(string ip, int port, Endianness endianness, Protocol protocol, bool useASCII)
+        /// <param name="interval">Use ASCII transport</param>
+        public ConnectorConfiguration(string ip, int port, Endianness endianness, Protocol protocol, bool useASCII, int interval)
         {
             Ip = ip;
             Port = port;
             Endianness = endianness;
             Protocol = protocol;
             UseASCII = useASCII;
+            Interval = interval;
         }
 
         /// <summary>
@@ -55,5 +57,11 @@ namespace RaaLabs.TimeSeries.Modbus
         /// </summary>
         /// <value></value>
         public bool UseASCII { get; }
+
+        /// <summary>
+        /// Gets the poll interval for the connector
+        /// </summary>
+        /// <value></value>
+        public int Interval { get; }
     }
 }
