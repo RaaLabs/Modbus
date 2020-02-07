@@ -22,7 +22,8 @@ namespace RaaLabs.TimeSeries.Modbus
         /// <param name="protocol"><see cref="Protocol"/> to use for connecting</param>
         /// <param name="useASCII">Use ASCII transport</param>
         /// <param name="interval">Use ASCII transport</param>
-        public ConnectorConfiguration(string ip, int port, Endianness endianness, Protocol protocol, bool useASCII, int interval)
+        /// <param name="timeout"> The read timeout for the connector</param>
+        public ConnectorConfiguration(string ip, int port, Endianness endianness, Protocol protocol, bool useASCII, int interval, int timeout)
         {
             Ip = ip;
             Port = port;
@@ -30,6 +31,7 @@ namespace RaaLabs.TimeSeries.Modbus
             Protocol = protocol;
             UseASCII = useASCII;
             Interval = interval;
+            Timeout = timeout;
         }
 
         /// <summary>
@@ -63,5 +65,11 @@ namespace RaaLabs.TimeSeries.Modbus
         /// </summary>
         /// <value></value>
         public int Interval { get; }
+
+        /// <summary>
+        /// set the read timeout for the connector
+        /// </summary>
+        /// <value></value>
+        public int Timeout { get; }
     }
 }

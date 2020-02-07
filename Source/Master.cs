@@ -114,6 +114,7 @@ namespace RaaLabs.TimeSeries.Modbus
             if (_client == null)
             {
                 _client = new TcpClient(_configuration.Ip, _configuration.Port);
+                _client.ReceiveTimeout = _configuration.Timeout;
                 _adapter = new TcpClientAdapter(_client);
                 var factory = new ModbusFactory();
                 if (_configuration.UseASCII) _master = factory.CreateAsciiMaster(_adapter);
