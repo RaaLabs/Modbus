@@ -10,6 +10,7 @@ using System.Diagnostics;
 using Dolittle.Logging;
 using RaaLabs.TimeSeries.Modules;
 using RaaLabs.TimeSeries.Modules.Connectors;
+using System.Threading;
 
 namespace RaaLabs.TimeSeries.Modbus
 {
@@ -57,31 +58,43 @@ namespace RaaLabs.TimeSeries.Modbus
 
             while (true)
             {
-                var timer = new Stopwatch();
-                timer.Start();
-                foreach (var register in _registers)
+                try
                 {
-                    _master.Read(register).ContinueWith(result =>
+                    var timer = new Stopwatch();
+                    timer.Start();
+                    foreach (var register in _registers)
                     {
-                        var bytes = result.Result;
 
-                        TagWithData[] tagsWithData = bytes.ToTagsWithData(register, reverseDatapoints);
-
-                        foreach (TagWithData tagWithData in tagsWithData)
+                        _master.Read(register).ContinueWith(result =>
                         {
-                            DataReceived(tagWithData.Tag, tagWithData.Data, Timestamp.UtcNow);
-                            _logger.Information($"Tag: {tagWithData.Tag}, Value : {tagWithData.Data}");
-                        }
+                            var bytes = result.Result;
 
-                    }).Wait();
+                            TagWithData[] tagsWithData = bytes.ToTagsWithData(register, reverseDatapoints);
+
+                            foreach (TagWithData tagWithData in tagsWithData)
+                            {
+                                DataReceived(tagWithData.Tag, tagWithData.Data, Timestamp.UtcNow);
+                                _logger.Information($"Tag: {tagWithData.Tag}, Value : {tagWithData.Data}");
+                            }
+
+                        }).Wait();
+
+                    }
+
+                    timer.Stop();
+                    int elapsed = (int)timer.ElapsedMilliseconds;
+                    if (elapsed < interval)
+                    {
+                        Task.Delay(interval - elapsed).Wait();
+                    }
+
                 }
-
-                timer.Stop();
-                int elapsed = (int)timer.ElapsedMilliseconds;
-                if (elapsed < interval)
+                catch (Exception ex)
                 {
-                    Task.Delay(interval - elapsed).Wait();
+                    _logger.Error(ex, "Error while connecting to Modbus");
+                    Thread.Sleep(2000);
                 }
+
             }
         }
     }
