@@ -1,7 +1,10 @@
-[{
+
+[
+    {
     "unit": 1,
-    "startingAddress": 0,
-    "dataType": 4,
+    "startingAddress": 1,
+    "dataType": 1,
     "functionCode": 2,
-    "size": 1
-}]
+    "size": 15
+    }
+    ]
