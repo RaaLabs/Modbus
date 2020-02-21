@@ -3,7 +3,8 @@
     "port": "1337",
     "useASCII": false,
     "endianness": 3,
-    "protocol": 1,
-    "interval": 2000
+    "protocol": 2,
+    "interval": 2000,
+    "readTimeout": 1000
     }
     
