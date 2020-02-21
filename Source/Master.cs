@@ -4,11 +4,13 @@
  *--------------------------------------------------------------------------------------------*/
 using System;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 using Dolittle.Collections;
 using Dolittle.Lifecycle;
 using Dolittle.Logging;
 using NModbus;
+using NModbus.Device;
 using NModbus.IO;
 
 namespace RaaLabs.TimeSeries.Modbus
@@ -25,7 +27,6 @@ namespace RaaLabs.TimeSeries.Modbus
         TcpClient _client;
         TcpClientAdapter _adapter;
         IModbusMaster _master;
-
 
         /// <summary>
         /// Initializes a new instance of <see cref="Master"/>
@@ -56,19 +57,21 @@ namespace RaaLabs.TimeSeries.Modbus
 
             _logger.Information($"Getting data from slave {register.Unit} startingAdress {register.StartingAddress} size {register.Size} as DataType {Enum.GetName(typeof(DataType), register.DataType)}");
 
-            ushort[] result;
 
             var size = Convert.ToUInt16(register.Size * GetDataSizeFrom(register.DataType));
 
             try
             {
+                ushort[] result = new ushort[0];
                 switch (register.FunctionCode)
                 {
                     case FunctionCode.HoldingRegister:
-                        result = await _master.ReadHoldingRegistersAsync(register.Unit, register.StartingAddress, size);
+                        result = await DoWithTimeout(Task.Run(() => _master.ReadHoldingRegistersAsync(register.Unit, register.StartingAddress, size)), _configuration.ReadTimeout);
+
                         break;
                     case FunctionCode.InputRegister:
-                        result = await _master.ReadInputRegistersAsync(register.Unit, register.StartingAddress, size);
+                        result = await DoWithTimeout(Task.Run(() => _master.ReadInputRegistersAsync(register.Unit, register.StartingAddress, size)), _configuration.ReadTimeout);
+
                         break;
                     default:
                         result = new ushort[0];
@@ -78,10 +81,29 @@ namespace RaaLabs.TimeSeries.Modbus
                 return bytes;
 
             }
+            catch (OperationCanceledException canceled)
+            {
+                _logger.Error(canceled, $"Read operation cancelled while reading register {register}");
+                _client.Dispose();
+                _client = null;
+                throw new Exception();
+            }
             catch (Exception ex)
             {
                 _logger.Error(ex, $"Trouble reading register {register}");
                 return null;
+            }
+        }
+
+        async Task<T> DoWithTimeout<T>(Task<T> task, int timeout)
+        {
+            if (await Task.WhenAny(task, Task.Delay(timeout)) == task)
+            {
+                return await task;
+            }
+            else
+            {
+                throw new OperationCanceledException();
             }
         }
 
