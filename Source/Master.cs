@@ -84,14 +84,18 @@ namespace RaaLabs.TimeSeries.Modbus
             catch (OperationCanceledException canceled)
             {
                 _logger.Error(canceled, $"Read operation cancelled while reading register {register}");
-                _client.Dispose();
+                _client?.Close();
+                _client?.Dispose();
                 _client = null;
                 throw new Exception();
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, $"Trouble reading register {register}");
-                return null;
+                _client?.Close();
+                _client?.Dispose();
+                _client = null;
+                throw new Exception();
             }
         }
 
