@@ -29,7 +29,6 @@ jobs:
       run: echo $tagName
 
     - name: Build docker image
-      working-directory: ./Source
       run: docker build -t $dockerImageName:$tagName --build-arg CONFIGURATION="Release" -f ./Source/Dockerfile .
 
     - name: Docker Login 
