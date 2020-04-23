@@ -1,0 +1,24 @@
+name: build and test project
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup .NET Core 3
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.100
+
+    - name: Setup .NET Core 2
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 2.2.207
+
+
+    - name: Build with dotnet
+      run: dotnet build --configuration Release
+      working-directory: ./Source
