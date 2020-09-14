@@ -1,4 +1,5 @@
 using Machine.Specifications;
+using RaaLabs.TimeSeries.Modbus;
 
 namespace RaaLabs.TimeSeries.Modbus.Specifications.for_ByteExtensions
 {
@@ -36,9 +37,9 @@ namespace RaaLabs.TimeSeries.Modbus.Specifications.for_ByteExtensions
 
         Because of = () =>
         {
-            twoFloatTags = input.ToTagsWithData(twoFloats);
-            twoInt32Tags = input.ToTagsWithData(twoInt32s);
-            fourInt16Tags = input.ToTagsWithData(fourInt16s);
+            twoFloatTags = input.ToTagsWithData(twoFloats, false);
+            twoInt32Tags = input.ToTagsWithData(twoInt32s, false);
+            fourInt16Tags = input.ToTagsWithData(fourInt16s, false);
         };
 
         It should_have_the_correct_addresses_and_values_for_twoFloatTags = () =>
