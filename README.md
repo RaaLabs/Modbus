@@ -1,6 +1,7 @@
 # Modbus
 
-[![Build Status](https://dev.azure.com/dolittle/Dolittle%20open-source%20repositories/_apis/build/status/dolittle-timeseries.Modbus?branchName=master)](https://dev.azure.com/dolittle/Dolittle%20open-source%20repositories/_build/latest?definitionId=18&branchName=master)
+![CI/CD](https://github.com/RaaLabs/Modbus/workflows/.NET%20Core/badge.svg)
+[![codecov](https://codecov.io/gh/Raalabs/Modbus/branch/master/graph/badge.svg)](https://codecov.io/gh/Raalabs/Modbus)
 
 ## Cloning
 
