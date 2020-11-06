@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 using Dolittle.Configuration;
+using RaaLabs.TimeSeries.Modules;
 
 namespace RaaLabs.TimeSeries.Modbus
 {
@@ -11,7 +12,7 @@ namespace RaaLabs.TimeSeries.Modbus
     /// Represents the configuration for <see cref="Connector"/>
     /// </summary>
     [Name("connector")]
-    public class ConnectorConfiguration : IConfigurationObject
+    public class ConnectorConfiguration : IConfigurationObject, ITriggerAppRestartOnChange
     {
         /// <summary>
         /// Initializes a new instance of <see cref="ConnectorConfiguration"/>
