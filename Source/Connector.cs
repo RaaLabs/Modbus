@@ -72,8 +72,10 @@ namespace RaaLabs.TimeSeries.Modbus
 
                             foreach (TagWithData tagWithData in tagsWithData)
                             {
-                                DataReceived(tagWithData.Tag, tagWithData.Data, Timestamp.UtcNow);
-                                _logger.Information($"Tag: {tagWithData.Tag}, Value : {tagWithData.Data}");
+                                if (!tagWithData.Data.Equals(Single.NaN)){
+                                    DataReceived(tagWithData.Tag, tagWithData.Data, Timestamp.UtcNow);
+                                    _logger.Information($"Tag: {tagWithData.Tag}, Value : {tagWithData.Data}");
+                                }
                             }
 
                         }).Wait();
@@ -95,3 +97,4 @@ namespace RaaLabs.TimeSeries.Modbus
         }
     }
 }
+

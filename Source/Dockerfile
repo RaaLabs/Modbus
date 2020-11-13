@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/runtime:3.1-buster-slim AS base
+FROM mcr.microsoft.com/dotnet/core/runtime:3.1-buster-slim as base
 
 ARG CONFIGURATION=Release
 
@@ -31,7 +31,7 @@ WORKDIR /app/Source/
 RUN dotnet restore
 
 COPY Source/ ./
-RUN dotnet publish -c $CONFIGURATION -o out
+RUN dotnet publish -c Release -o out
 
 
 FROM base
