@@ -15,7 +15,8 @@ namespace RaaLabs.TimeSeries.Modbus
     [Name("registers")]
     public class RegistersConfiguration :
         ReadOnlyCollection<Register>,
-        IConfigurationObject
+        IConfigurationObject,
+        ITriggerAppRestartOnChange
     {
         /// <summary>
         /// Initializes a new instance of <see cref="RegistersConfiguration"/>

@@ -1,0 +1,11 @@
+ignore:
+  - "Source/Program.cs"
+  - "Source/ConnectorConfiguration.cs"
+  - "Source/RegistersConfiguration.cs"
+  - "Source/DataType.cs"
+  - "Source/Endianness.cs"
+  - "Source/FunctionCode.cs"
+  - "Source/IMaster.cs"
+  - "Source/Protocol.cs"
+  - "Source/Register.cs"
+  - "Source/Unit.cs"

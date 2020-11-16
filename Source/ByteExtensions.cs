@@ -20,7 +20,7 @@ namespace RaaLabs.TimeSeries.Modbus
         /// <param name="register">Register information <see cref="Register">register</see></param>
         /// <param name="reverseDatapoints">Is set if the data points should come in reversed order</param>
         /// <returns>Array of <see cref="TagWithData"/></returns>
-        public static TagWithData[] ToTagsWithData(this byte[] bytes, Register register, bool reverseDatapoints)
+        public static TagWithData[] ToTagsWithData(this byte[] bytes, Register register, bool reverseDatapoints = false)
         {
             var datapointSize = GetDatapointSizeFrom(register.DataType);
 
