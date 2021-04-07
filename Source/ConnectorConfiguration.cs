@@ -2,17 +2,20 @@
  *  Copyright (c) RaaLabs. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-using Dolittle.Configuration;
-using RaaLabs.TimeSeries.Modules;
+using RaaLabs.Edge.Modules.Configuration;
+using RaaLabs.Edge.Connectors.Modbus.Bridge;
+using RaaLabs.Edge.Connectors.Modbus.Model;
+using System.Diagnostics.CodeAnalysis;
 
-namespace RaaLabs.TimeSeries.Modbus
+namespace RaaLabs.Edge.Connectors.Modbus
 {
 
     /// <summary>
-    /// Represents the configuration for <see cref="Connector"/>
+    /// Represents the configuration for <see cref="ModbusBridge"/>
     /// </summary>
-    [Name("connector")]
-    public class ConnectorConfiguration : IConfigurationObject, ITriggerAppRestartOnChange
+    [Name("connector.json")]
+    [ExcludeFromCodeCoverage]
+    public class ConnectorConfiguration : IConfiguration
     {
         /// <summary>
         /// Initializes a new instance of <see cref="ConnectorConfiguration"/>
@@ -22,7 +25,7 @@ namespace RaaLabs.TimeSeries.Modbus
         /// <param name="endianness"><see cref="Endianness"/> to expect from the master</param>
         /// <param name="protocol"><see cref="Protocol"/> to use for connecting</param>
         /// <param name="useASCII">Use ASCII transport</param>
-        /// <param name="interval">Use ASCII transport</param>
+        /// <param name="interval">Modbus polling interval in milliseconds. If lower than zero, the connector will only poll Modbus once before exiting.</param>
         /// <param name="readTimeout">Modbus read timeout in milliseconds</param>
         public ConnectorConfiguration(string ip, int port, Endianness endianness, Protocol protocol, bool useASCII, int interval, int readTimeout = 1000)
         {

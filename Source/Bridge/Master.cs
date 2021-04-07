@@ -6,19 +6,19 @@ using System;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-using Dolittle.Collections;
-using Dolittle.Lifecycle;
-using Dolittle.Logging;
+using System.Linq;
 using NModbus;
 using NModbus.Device;
 using NModbus.IO;
+using Serilog;
+using RaaLabs.Edge.Connectors.Modbus.Model;
 
-namespace RaaLabs.TimeSeries.Modbus
+namespace RaaLabs.Edge.Connectors.Modbus.Bridge
 {
     /// <summary>
     /// Represents an implementation of <see cref="IMaster"/>
     /// </summary>
-    [Singleton]
+    //[Singleton]
     public class Master : IMaster, IDisposable
     {
         readonly ConnectorConfiguration _configuration;
@@ -77,7 +77,7 @@ namespace RaaLabs.TimeSeries.Modbus
                         result = new ushort[0];
                         break;
                 }
-                var bytes = result.GetBytes(_configuration.Endianness);
+                var bytes = result.GetBytes(_configuration.Endianness, register.DataType).ToArray();
                 return bytes;
 
             }

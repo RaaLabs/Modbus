@@ -5,8 +5,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using RaaLabs.Edge.Connectors.Modbus.Model;
 
-namespace RaaLabs.TimeSeries.Modbus
+namespace RaaLabs.Edge.Connectors.Modbus
 {
     /// <summary>
     /// Defines extension functions to interpret bytes
@@ -18,21 +19,11 @@ namespace RaaLabs.TimeSeries.Modbus
         /// </summary>
         /// <param name="bytes">Array of <see cref="byte">. Expected to be little endian.</see></param>
         /// <param name="register">Register information <see cref="Register">register</see></param>
-        /// <param name="reverseDatapoints">Is set if the data points should come in reversed order</param>
         /// <returns>Array of <see cref="TagWithData"/></returns>
-        public static TagWithData[] ToTagsWithData(this byte[] bytes, Register register, bool reverseDatapoints = false)
+        public static TagWithData[] ToTagsWithData(this byte[] bytes, Register register)
         {
             var datapointSize = GetDatapointSizeFrom(register.DataType);
 
-            if (reverseDatapoints)
-            {
-                var tempBytes = new List<byte>();
-                for (var byteIndex = bytes.Length; byteIndex >= 0; byteIndex -= datapointSize)
-                {
-                    tempBytes.AddRange(bytes.Skip(byteIndex).Take(datapointSize).ToArray());
-                }
-                bytes = tempBytes.ToArray();
-            }
             var convertedDataPoints = bytes.Chunk(datapointSize).Select(data => ConvertBytes(register.DataType, data.ToArray()));
             var tagsWithData = convertedDataPoints.Select((payload, index) =>
             {
@@ -75,7 +66,14 @@ namespace RaaLabs.TimeSeries.Modbus
             return 0;
         }
 
-        private static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> source, int size)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="size"></param>
+        /// <returns></returns>
+        public static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> source, int size)
         {
             while (source.Any())
             {
