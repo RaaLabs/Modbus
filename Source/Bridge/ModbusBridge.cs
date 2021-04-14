@@ -12,7 +12,7 @@ namespace RaaLabs.Edge.Connectors.Modbus.Bridge
     /// <summary>
     /// 
     /// </summary>
-    public class ModbusBridge : IRunAsync, IProduceEvent<Events.ModbusRegisterReceived> //IProduceEvent<events.ModbusDatapointOutput>
+    public class ModbusBridge : IRunAsync, IProduceEvent<Events.ModbusRegisterReceived>
     {
         private readonly ILogger _logger;
         private readonly RegistersConfiguration _registers;
