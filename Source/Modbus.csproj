@@ -1,6 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <Import Project="../default.props" />
-
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net5.0</TargetFramework>
@@ -15,9 +13,9 @@
     
     <ItemGroup>
         <PackageReference Include="nmodbus" Version="3.0.58" />
-        <PackageReference Include="RaaLabs.Edge" Version="1.0.1000" />
-        <PackageReference Include="RaaLabs.Edge.Modules.Configuration" Version="1.0.*" />
-        <PackageReference Include="RaaLabs.Edge.Modules.EdgeHub" Version="1.0.*" />
-        <PackageReference Include="RaaLabs.Edge.Modules.EventHandling" Version="1.0.*" />
+        <PackageReference Include="RaaLabs.Edge" Version="1.1.1" />
+        <PackageReference Include="RaaLabs.Edge.Modules.Configuration" Version="1.1.1" />
+        <PackageReference Include="RaaLabs.Edge.Modules.EdgeHub" Version="1.1.1" />
+        <PackageReference Include="RaaLabs.Edge.Modules.EventHandling" Version="1.1.1" />
     </ItemGroup>
 </Project>

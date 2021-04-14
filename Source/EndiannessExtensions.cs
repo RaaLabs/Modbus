@@ -30,9 +30,6 @@ namespace RaaLabs.Edge.Connectors.Modbus
                 _ => 1
             };
             var endian = BitConverter.IsLittleEndian;
-            var swapWords = endianness.ShouldSwapWords();
-            var swapBytes = endianness.ShouldSwapBytesInWords();
-            var byts = shorts.SelectMany(sh => BitConverter.GetBytes(sh)).ToList();
 
             shorts = (endianness.ShouldSwapWords()) ? shorts.ChunkwiseReverse(shortsInDataPoint) : shorts;
             var bytes = shorts.SelectMany(sh => BitConverter.GetBytes(sh)).ToList();
