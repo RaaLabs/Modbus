@@ -13,7 +13,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace RaaLabs.TimeSeries.Modbus
 {
     [ExcludeFromCodeCoverage]
-    class Program
+    static class Program
     {
         static void Main()
         {

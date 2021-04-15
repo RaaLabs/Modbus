@@ -1,18 +1,11 @@
 using RaaLabs.Edge.Modules.EventHandling;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using RaaLabs.Edge.Connectors.Modbus.Model;
-using System.Diagnostics.CodeAnalysis;
 
 namespace RaaLabs.Edge.Connectors.Modbus.Events
 {
     /// <summary>
     /// 
     /// </summary>
-    [ExcludeFromCodeCoverage]
     public class ModbusRegisterReceived : IEvent
     {
         /// <summary>

@@ -11,14 +11,14 @@ using RaaLabs.Edge.Connectors.Modbus.Model;
 namespace RaaLabs.Edge.Connectors.Modbus
 {
     /// <summary>
-    /// 
+    /// Handler for parsing Modbus data points and sending these data points to EdgeHub
     /// </summary>
     public class ModbusRegisterReceivedHandler : IConsumeEvent<ModbusRegisterReceived>, IProduceEvent<ModbusDatapointOutput>
     {
         private readonly ILogger _logger;
 
         /// <summary>
-        /// 
+        /// Delegate for sending event to EdgeHub
         /// </summary>
         public event EventEmitter<ModbusDatapointOutput> SendEvent;
 
@@ -32,30 +32,28 @@ namespace RaaLabs.Edge.Connectors.Modbus
         }
 
         /// <summary>
-        /// 
+        /// Handler for incoming modbus data point
         /// </summary>
         /// <param name="event"></param>
         public void Handle(ModbusRegisterReceived @event)
         {
-            TagWithData[] tagsWithData = @event.Payload.ToTagsWithData(@event.Register);
+            var tagsWithData = @event.Payload.ExtractDataPoints(@event.Register);
 
-            var timestamp = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
+            var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
             foreach(var tagWithData in tagsWithData)
             {
-                if (!tagWithData.Data.Equals(Single.NaN))
+                if (!tagWithData.data.Equals(Single.NaN))
                 {
                     var output = new ModbusDatapointOutput
                     {
                         source = "Modbus",
-                        tag = tagWithData.Tag,
+                        tag = tagWithData.tag,
                         timestamp = timestamp,
-                        value = tagWithData.Data
+                        value = tagWithData.data
                     };
 
                     SendEvent(output);
-
-                    _logger.Information($"Tag: {tagWithData.Tag}, Value : {tagWithData.Data}");
                 }
             }
         }

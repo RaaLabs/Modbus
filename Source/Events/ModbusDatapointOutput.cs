@@ -1,5 +1,4 @@
 using RaaLabs.Edge.Modules.EdgeHub;
-using System.Diagnostics.CodeAnalysis;
 
 namespace RaaLabs.Edge.Connectors.Modbus.Events
 {
@@ -7,7 +6,6 @@ namespace RaaLabs.Edge.Connectors.Modbus.Events
     /// 
     /// </summary>
     [OutputName("output")]
-    [ExcludeFromCodeCoverage]
     public class ModbusDatapointOutput : IEdgeHubOutgoingEvent
     {
         /// <summary>

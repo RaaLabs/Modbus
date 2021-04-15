@@ -15,12 +15,12 @@ namespace RaaLabs.Edge.Connectors.Modbus
     public static class ByteExtensions
     {
         /// <summary>
-        /// Convert from bytes to array of <see cref="TagWithData"/>
+        /// Extract tags and data from byte array/>
         /// </summary>
         /// <param name="bytes">Array of <see cref="byte">. Expected to be little endian.</see></param>
         /// <param name="register">Register information <see cref="Register">register</see></param>
-        /// <returns>Array of <see cref="TagWithData"/></returns>
-        public static TagWithData[] ToTagsWithData(this byte[] bytes, Register register)
+        /// <returns>a collection of tuples containing tag and data</returns>
+        public static IEnumerable<(string tag, object data)> ExtractDataPoints(this byte[] bytes, Register register)
         {
             var datapointSize = GetDatapointSizeFrom(register.DataType);
 
@@ -28,10 +28,10 @@ namespace RaaLabs.Edge.Connectors.Modbus
             var tagsWithData = convertedDataPoints.Select((payload, index) =>
             {
                 var tag = $"{register.Unit}:{register.StartingAddress + index * (datapointSize / 2)}";
-                return new TagWithData(tag, payload);
+                return (tag, payload);
             });
 
-            return tagsWithData.ToArray();
+            return tagsWithData;
         }
 
         static ushort GetDatapointSizeFrom(DataType type)
@@ -67,12 +67,12 @@ namespace RaaLabs.Edge.Connectors.Modbus
         }
 
         /// <summary>
-        /// 
+        /// Extension function to separate a collection into chunks of a given size
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="source"></param>
-        /// <param name="size"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">the type in the collection</typeparam>
+        /// <param name="source">the collection to separate into chunks</param>
+        /// <param name="size">the chunk size</param>
+        /// <returns>a collection of chunks, each of the given size</returns>
         public static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> source, int size)
         {
             while (source.Any())

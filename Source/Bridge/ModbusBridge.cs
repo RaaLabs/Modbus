@@ -52,7 +52,6 @@ namespace RaaLabs.Edge.Connectors.Modbus.Bridge
         /// <inheritdoc/>
         public async Task Connect()
         {
-            var reverseDatapoints = _configuration.Endianness.ShouldSwapWords();
             var interval = _configuration.Interval;
 
             while (true)
