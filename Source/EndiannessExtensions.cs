@@ -7,6 +7,8 @@ using System;
 using RaaLabs.Edge.Connectors.Modbus.Model;
 using System.Linq;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 
 namespace RaaLabs.Edge.Connectors.Modbus
 {
@@ -82,17 +84,28 @@ namespace RaaLabs.Edge.Connectors.Modbus
         /// <param name="endianness"><see cref="Endianness"/> to check</param>
         /// <returns>True if it should be swapped, false if not</returns>
         public static bool ShouldSwapBytesInWords(this Endianness endianness) => endianness == Endianness.HighByteHighWord || endianness == Endianness.HighByteLowWord;
-    
+
         [Serializable]
+        [ExcludeFromCodeCoverage]
         public class ElementsNotPerfectlyDivisableIntoChunksException : Exception
         {
             public int NumElements { get; }
             public int ChunkSize { get; }
             public ElementsNotPerfectlyDivisableIntoChunksException(int numElements, int chunkSize)
-                :base($"{numElements} elements not perfectly divisible into chunks of {chunkSize}")
+                : base($"{numElements} elements not perfectly divisible into chunks of {chunkSize}")
             {
                 NumElements = numElements;
                 ChunkSize = chunkSize;
+            }
+
+            protected ElementsNotPerfectlyDivisableIntoChunksException(SerializationInfo info, StreamingContext context) : base(info, context)
+            {
+
+            }
+
+            public override void GetObjectData(SerializationInfo info, StreamingContext context)
+            {
+                base.GetObjectData(info, context);
             }
         }
     }

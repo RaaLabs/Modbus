@@ -12,6 +12,7 @@ using NModbus.Device;
 using NModbus.IO;
 using Serilog;
 using RaaLabs.Edge.Connectors.Modbus.Model;
+using System.Runtime.Serialization;
 
 namespace RaaLabs.Edge.Connectors.Modbus.Bridge
 {
@@ -146,6 +147,11 @@ namespace RaaLabs.Edge.Connectors.Modbus.Bridge
             }
 
             public ModbusMasterException(string message, Exception inner) : base(message, inner)
+            {
+
+            }
+
+            protected ModbusMasterException(SerializationInfo info, StreamingContext context) : base(info, context)
             {
 
             }
