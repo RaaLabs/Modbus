@@ -42,7 +42,6 @@ namespace RaaLabs.Edge.Connectors.Modbus.Bridge
         public async Task<byte[]> Read(Register register)
         {
             MakeSureClientIsConnected();
-
             _logger.Information($"Getting data from slave {register.Unit} startingAdress {register.StartingAddress} size {register.Size} as DataType {Enum.GetName(typeof(DataType), register.DataType)}");
 
 
@@ -50,7 +49,7 @@ namespace RaaLabs.Edge.Connectors.Modbus.Bridge
 
             try
             {
-                ushort[] result = new ushort[0];
+                ushort[] result;
                 switch (register.FunctionCode)
                 {
                     case FunctionCode.HoldingRegister:
@@ -62,7 +61,7 @@ namespace RaaLabs.Edge.Connectors.Modbus.Bridge
 
                         break;
                     default:
-                        result = new ushort[0];
+                        result = Array.Empty<ushort>();
                         break;
                 }
                 var bytes = result.GetBytes(_configuration.Endianness, register.DataType).ToArray();
@@ -75,7 +74,8 @@ namespace RaaLabs.Edge.Connectors.Modbus.Bridge
                 _client?.Close();
                 _client?.Dispose();
                 _client = null;
-                throw new Exception();
+
+                throw new ModbusMasterException($"Read operation cancelled while reading register {register}", canceled);
             }
             catch (Exception ex)
             {
@@ -83,11 +83,12 @@ namespace RaaLabs.Edge.Connectors.Modbus.Bridge
                 _client?.Close();
                 _client?.Dispose();
                 _client = null;
-                throw new Exception();
+
+                throw new ModbusMasterException($"Trouble reading register {register}", ex);
             }
         }
 
-        async Task<T> DoWithTimeout<T>(Task<T> task, int timeout)
+        static async Task<T> DoWithTimeout<T>(Task<T> task, int timeout)
         {
             if (await Task.WhenAny(task, Task.Delay(timeout)) == task)
             {
@@ -99,7 +100,7 @@ namespace RaaLabs.Edge.Connectors.Modbus.Bridge
             }
         }
 
-        ushort GetDataSizeFrom(DataType type)
+        private static ushort GetDataSizeFrom(DataType type)
         {
             switch (type)
             {
@@ -133,6 +134,20 @@ namespace RaaLabs.Edge.Connectors.Modbus.Bridge
                 if (_configuration.UseASCII) _master = factory.CreateAsciiMaster(_adapter);
                 else if (_configuration.Protocol == Protocol.Tcp) _master = factory.CreateMaster(_client);
                 else _master = factory.CreateRtuMaster(_adapter);
+            }
+        }
+
+        [Serializable]
+        public class ModbusMasterException : Exception
+        {
+            public ModbusMasterException(string message) : base(message)
+            {
+
+            }
+
+            public ModbusMasterException(string message, Exception inner) : base(message, inner)
+            {
+
             }
         }
     }

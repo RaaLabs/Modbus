@@ -83,6 +83,7 @@ namespace RaaLabs.Edge.Connectors.Modbus
         /// <returns>True if it should be swapped, false if not</returns>
         public static bool ShouldSwapBytesInWords(this Endianness endianness) => endianness == Endianness.HighByteHighWord || endianness == Endianness.HighByteLowWord;
     
+        [Serializable]
         public class ElementsNotPerfectlyDivisableIntoChunksException : Exception
         {
             public int NumElements { get; }

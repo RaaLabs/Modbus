@@ -15,8 +15,6 @@ namespace RaaLabs.Edge.Connectors.Modbus
     /// </summary>
     public class ModbusRegisterReceivedHandler : IConsumeEvent<ModbusRegisterReceived>, IProduceEvent<ModbusDatapointOutput>
     {
-        private readonly ILogger _logger;
-
         /// <summary>
         /// Delegate for sending event to EdgeHub
         /// </summary>
@@ -26,9 +24,8 @@ namespace RaaLabs.Edge.Connectors.Modbus
         /// 
         /// </summary>
         /// <param name="logger"></param>
-        public ModbusRegisterReceivedHandler(ILogger logger)
+        public ModbusRegisterReceivedHandler()
         {
-            _logger = logger;
         }
 
         /// <summary>
