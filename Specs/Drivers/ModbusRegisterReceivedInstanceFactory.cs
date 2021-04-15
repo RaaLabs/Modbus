@@ -1,10 +1,5 @@
 using RaaLabs.Edge.Connectors.Modbus.Events;
 using RaaLabs.Edge.Connectors.Modbus.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 

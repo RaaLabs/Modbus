@@ -1,15 +1,9 @@
 using BoDi;
 using Moq;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
-using RaaLabs.Edge.Connectors.Modbus.Bridge;
 using RaaLabs.Edge.Connectors.Modbus.Model;
-using RaaLabs.Edge.Connectors.Modbus.Specs.Drivers;
-using System.Threading.Tasks;
 
 namespace RaaLabs.Edge.Connectors.Modbus.Specs.Steps
 {

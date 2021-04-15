@@ -1,10 +1,7 @@
-using RaaLabs.Edge.Connectors.Modbus.Bridge;
 using System.Collections.Generic;
 using TechTalk.SpecFlow;
-using TechTalk.SpecFlow.Assist;
 using FluentAssertions;
 using RaaLabs.Edge.Connectors.Modbus.Specs.Drivers;
-using RaaLabs.Edge.Connectors.Modbus;
 using System.Linq;
 using System;
 using RaaLabs.Edge.Connectors.Modbus.Model;

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
@@ -21,12 +21,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Update="Features\EndiannessExtensions.feature.cs">
-            <DependentUpon>EndiannessExtensions.feature</DependentUpon>
-        </Compile>
-        <Compile Update="Features\ModbusRegisterReceivedHandler.feature.cs">
-            <DependentUpon>ModbusRegisterReceivedHandler.feature</DependentUpon>
-        </Compile>
         <Compile Update="Hooks\TypeMapperProvider.cs">
             <SubType>Code</SubType>
         </Compile>
