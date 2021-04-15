@@ -18,8 +18,7 @@ namespace RaaLabs.Edge.Connectors.Modbus.Bridge
     /// <summary>
     /// Represents an implementation of <see cref="IMaster"/>
     /// </summary>
-    //[Singleton]
-    public class Master : IMaster, IDisposable
+    public class Master : IMaster
     {
         readonly ConnectorConfiguration _configuration;
         readonly ILogger _logger;
@@ -37,17 +36,6 @@ namespace RaaLabs.Edge.Connectors.Modbus.Bridge
         {
             _configuration = configuration;
             _logger = logger;
-        }
-
-        /// <inheritdoc/>
-        public void Dispose()
-        {
-            _client?.Dispose();
-            _client = null;
-            _adapter?.Dispose();
-            _adapter = null;
-            _master?.Dispose();
-            _master = null;
         }
 
         /// <inheritdoc/>
