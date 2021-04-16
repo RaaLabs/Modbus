@@ -13,12 +13,14 @@ using NModbus.IO;
 using Serilog;
 using RaaLabs.Edge.Connectors.Modbus.Model;
 using System.Runtime.Serialization;
+using System.Diagnostics.CodeAnalysis;
 
 namespace RaaLabs.Edge.Connectors.Modbus.Bridge
 {
     /// <summary>
     /// Represents an implementation of <see cref="IMaster"/>
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class Master : IMaster
     {
         readonly ConnectorConfiguration _configuration;
