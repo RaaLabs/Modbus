@@ -1,8 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <OutputType>Exe</OutputType>
         <TargetFramework>net5.0</TargetFramework>
         <RootNamespace>RaaLabs.Edge.Connectors.Modbus.Specs</RootNamespace>
+        <AssemblyName>RaaLabs.Edge.Connectors.Modbus.Specs</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
