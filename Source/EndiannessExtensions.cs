@@ -26,11 +26,16 @@ namespace RaaLabs.Edge.Connectors.Modbus
         /// <returns>a collection of endianness corrected bytes</returns>
         public static IEnumerable<byte> GetBytes(this IEnumerable<ushort> shorts, Endianness endianness, DataType dataType)
         {
+
             var shortsInDataPoint = dataType switch
             {
                 DataType.Float or DataType.Int32 or DataType.Uint32 => 2,
                 _ => 1
             };
+            var bytesInDataPoint = shortsInDataPoint * 2;
+            var numBytes = shorts.Count() * 2;
+
+            if (numBytes % bytesInDataPoint != 0) throw new ElementsNotPerfectlyDivisableIntoChunksException(numBytes, bytesInDataPoint);
 
             shorts = (endianness.ShouldSwapWords()) ? shorts.ChunkwiseReverse(shortsInDataPoint) : shorts;
             var bytes = shorts.SelectMany(sh => BitConverter.GetBytes(sh)).ToList();
@@ -58,8 +63,6 @@ namespace RaaLabs.Edge.Connectors.Modbus
         /// <returns>a chunkwise reversed collection of type T</returns>
         private static IEnumerable<T> ChunkwiseReverse<T>(this IEnumerable<T> elements, int chunkSize)
         {
-            if (elements.Count() % chunkSize != 0) throw new ElementsNotPerfectlyDivisableIntoChunksException(elements.Count(), chunkSize);
-
             while (elements.Any())
             {
                 var reversedChunk = elements.Take(chunkSize).Reverse();
