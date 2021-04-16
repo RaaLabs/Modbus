@@ -20,7 +20,7 @@ namespace RaaLabs.Edge.Connectors.Modbus
         /// <param name="bytes">Array of <see cref="byte">. Expected to be little endian.</see></param>
         /// <param name="register">Register information <see cref="Register">register</see></param>
         /// <returns>a collection of tuples containing tag and data</returns>
-        public static IEnumerable<(string tag, object data)> ExtractDataPoints(this byte[] bytes, Register register)
+        public static IEnumerable<(string tag, dynamic data)> ExtractDataPoints(this byte[] bytes, Register register)
         {
             var datapointSize = GetDatapointSizeFrom(register.DataType);
 
@@ -36,34 +36,24 @@ namespace RaaLabs.Edge.Connectors.Modbus
 
         static ushort GetDatapointSizeFrom(DataType type)
         {
-            switch (type)
+            return type switch
             {
-                case DataType.Int32:
-                    return 4;
-                case DataType.Uint32:
-                    return 4;
-                case DataType.Float:
-                    return 4;
-                case DataType.Int16:
-                    return 2;
-            }
-            return 2;
+                DataType.Int32 => 4,
+                DataType.Uint32 => 4,
+                DataType.Float => 4,
+                _ => 2
+            };
         }
 
-        static object ConvertBytes(DataType type, byte[] bytes)
+        static dynamic ConvertBytes(DataType type, byte[] bytes)
         {
-            switch (type)
+            return type switch
             {
-                case DataType.Int32:
-                    return BitConverter.ToInt32(bytes);
-                case DataType.Uint32:
-                    return BitConverter.ToUInt32(bytes);
-                case DataType.Float:
-                    return BitConverter.ToSingle(bytes);
-                case DataType.Int16:
-                    return BitConverter.ToInt16(bytes);
-            }
-            return 0;
+                DataType.Int32 => BitConverter.ToInt32(bytes),
+                DataType.Uint32 => BitConverter.ToUInt32(bytes),
+                DataType.Float => BitConverter.ToSingle(bytes),
+                _ => BitConverter.ToInt16(bytes),
+            };
         }
 
         /// <summary>

@@ -7,6 +7,10 @@ Scenario: Converting from shorts to bytes
 		| Uint32   | HighByteLowWord  | AABB CCDD  1122 3344  9988 7766       |
 		| Uint32   | LowByteHighWord  | AABB CCDD  1122 3344  9988 7766       |
 		| Uint32   | LowByteLowWord   | AABB CCDD  1122 3344  9988 7766       |
+		| Int32    | HighByteHighWord | AABB CCDD  1122 3344  9988 7766       |
+		| Int32    | HighByteLowWord  | AABB CCDD  1122 3344  9988 7766       |
+		| Int32    | LowByteHighWord  | AABB CCDD  1122 3344  9988 7766       |
+		| Int32    | LowByteLowWord   | AABB CCDD  1122 3344  9988 7766       |
 		| Int16    | HighByteHighWord | AABB CCDD  1122 3344  9988 7766       |
 		| Int16    | HighByteLowWord  | AABB CCDD  1122 3344  9988 7766       |
 		| Int16    | LowByteHighWord  | AABB CCDD  1122 3344  9988 7766       |
@@ -22,13 +26,17 @@ Scenario: Converting from shorts to bytes
 		| BBAA DDCC  2211 4433  8899 6677 |
 		| CCDD AABB  3344 1122  7766 9988 |
 		| AABB CCDD  1122 3344  9988 7766 |
+		| DDCC BBAA  4433 2211  6677 8899 |
+		| BBAA DDCC  2211 4433  8899 6677 |
+		| CCDD AABB  3344 1122  7766 9988 |
+		| AABB CCDD  1122 3344  9988 7766 |
 		| BBAA DDCC  2211 4433  8899 6677 |
 		| BBAA DDCC  2211 4433  8899 6677 |
 		| AABB CCDD  1122 3344  9988 7766 |
 		| AABB CCDD  1122 3344  9988 7766 |
 	And the following input rows should throw an exception
 		| RowNumber |
-		| 9         |
-		| 10        |
-		| 11        |
-		| 12        |
+		| 13        |
+		| 14        |
+		| 15        |
+		| 16        |
