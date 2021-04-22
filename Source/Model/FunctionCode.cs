@@ -3,31 +3,34 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-namespace RaaLabs.TimeSeries.Modbus
+namespace RaaLabs.Edge.Connectors.Modbus.Model
 {
     /// <summary>
-    /// Represents the different types of data a <see cref="Register"/> can have
+    /// Represents a Modbus function code
     /// </summary>
-    public enum DataType
+    /// <remarks>
+    /// http://www.simplymodbus.ca/FAQ.htm#FC
+    /// </remarks>
+    public enum FunctionCode
     {
         /// <summary>
-        /// 32 bit integer
+        /// Discrete output coil
         /// </summary>
-        Int32=1,
+        Coil = 1,
 
         /// <summary>
-        /// Unsigned 32 bit integer
+        /// Holding registers
         /// </summary>
-        Uint32,
+        HoldingRegister,
 
         /// <summary>
-        /// IEEE 754 floating point; https://en.m.wikipedia.org/wiki/IEEE_754
+        /// Discrete input contacts
         /// </summary>
-        Float,
+        Input,
 
         /// <summary>
-        /// 16 bit integer
+        /// Input register
         /// </summary>
-        Int16
+        InputRegister
     }
 }

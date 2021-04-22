@@ -4,8 +4,13 @@
  *--------------------------------------------------------------------------------------------*/
 
 using System;
+using RaaLabs.Edge.Connectors.Modbus.Model;
+using System.Linq;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 
-namespace RaaLabs.TimeSeries.Modbus
+namespace RaaLabs.Edge.Connectors.Modbus
 {
     /// <summary>
     /// Defines a converter for endian
@@ -13,32 +18,60 @@ namespace RaaLabs.TimeSeries.Modbus
     public static class EndiannessExtensions
     {
         /// <summary>
-        /// Get correct bytes according to a given <see cref="Endianness"/>
+        /// Extension function to get the bytes of the payload, with corrected endianness.
         /// </summary>
-        /// <param name="shorts">Array of <see cref="ushort">shorts</see></param>
-        /// <param name="endianness"><see cref="Endianness"/> expected in the shorts</param>
-        /// <returns>Array of <see cref="byte"/> with correct endian for current CPU</returns>
-        public static byte[] GetBytes(this ushort[] shorts, Endianness endianness)
+        /// <param name="shorts">the collection of shorts to get the individual bytes from</param>
+        /// <param name="endianness">the endianness to use</param>
+        /// <param name="dataType">the Modbus data type</param>
+        /// <returns>a collection of endianness corrected bytes</returns>
+        public static IEnumerable<byte> GetBytes(this IEnumerable<ushort> shorts, Endianness endianness, DataType dataType)
         {
-            ushort[] targetShorts = new ushort[shorts.Length];
-            Array.Copy(shorts, targetShorts, shorts.Length);
 
-            if (endianness.ShouldSwapWords()) Array.Reverse(targetShorts);
-
-            var bytes = new byte[targetShorts.Length * 2];
-            var byteIndex = 0;
-            for (var i = 0; i < targetShorts.Length; i++)
+            var shortsInDataPoint = dataType switch
             {
-                var resultBytes = BitConverter.GetBytes(targetShorts[i]);
+                DataType.Float or DataType.Int32 or DataType.Uint32 => 2,
+                _ => 1
+            };
+            var bytesInDataPoint = shortsInDataPoint * 2;
+            var numBytes = shorts.Count() * 2;
 
-                if (endianness.ShouldSwapBytes()) Array.Reverse(resultBytes);
+            if (numBytes % bytesInDataPoint != 0) throw new ElementsNotPerfectlyDivisableIntoChunksException(numBytes, bytesInDataPoint);
 
-                Array.Copy(resultBytes, 0, bytes, byteIndex, resultBytes.Length);
-
-                byteIndex += resultBytes.Length;
-            }
+            shorts = (endianness.ShouldSwapWords()) ? shorts.ChunkwiseReverse(shortsInDataPoint) : shorts;
+            var bytes = shorts.SelectMany(sh => BitConverter.GetBytes(sh)).ToList();
+            bytes = (endianness.ShouldSwapBytesInWords()) ? bytes.ChunkwiseReverse(2).ToList() : bytes;
 
             return bytes;
+        }
+
+        /// <summary>
+        /// Reverse every chunk of N elements within the collection.
+        /// 
+        /// Example:
+        /// 
+        /// Let's reverse each chunk of 3 elements in the following element collection:
+        /// ABC DEF GHI
+        /// 
+        /// This will yield the following new collection:
+        /// CBA FED IHG
+        /// 
+        /// A chunk size of 1 will yield a copy of the original collection.
+        /// </summary>
+        /// <typeparam name="T">the type of the elements in the collection</typeparam>
+        /// <param name="elements">elements to reverse chunkwise</param>
+        /// <param name="chunkSize">size of chunks</param>
+        /// <returns>a chunkwise reversed collection of type T</returns>
+        private static IEnumerable<T> ChunkwiseReverse<T>(this IEnumerable<T> elements, int chunkSize)
+        {
+            while (elements.Any())
+            {
+                var reversedChunk = elements.Take(chunkSize).Reverse();
+                foreach (var element in reversedChunk)
+                {
+                    yield return element;
+                }
+                elements = elements.Skip(chunkSize);
+            }
         }
 
         /// <summary>
@@ -53,6 +86,30 @@ namespace RaaLabs.TimeSeries.Modbus
         /// </summary>
         /// <param name="endianness"><see cref="Endianness"/> to check</param>
         /// <returns>True if it should be swapped, false if not</returns>
-        public static bool ShouldSwapBytes(this Endianness endianness) => endianness == Endianness.HighByteHighWord || endianness == Endianness.HighByteLowWord;
+        public static bool ShouldSwapBytesInWords(this Endianness endianness) => endianness == Endianness.HighByteHighWord || endianness == Endianness.HighByteLowWord;
+
+        [Serializable]
+        [ExcludeFromCodeCoverage]
+        public class ElementsNotPerfectlyDivisableIntoChunksException : Exception
+        {
+            public int NumElements { get; }
+            public int ChunkSize { get; }
+            public ElementsNotPerfectlyDivisableIntoChunksException(int numElements, int chunkSize)
+                : base($"{numElements} elements not perfectly divisible into chunks of {chunkSize}")
+            {
+                NumElements = numElements;
+                ChunkSize = chunkSize;
+            }
+
+            protected ElementsNotPerfectlyDivisableIntoChunksException(SerializationInfo info, StreamingContext context) : base(info, context)
+            {
+
+            }
+
+            public override void GetObjectData(SerializationInfo info, StreamingContext context)
+            {
+                base.GetObjectData(info, context);
+            }
+        }
     }
 }

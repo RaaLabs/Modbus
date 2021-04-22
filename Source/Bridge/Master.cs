@@ -6,20 +6,22 @@ using System;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-using Dolittle.Collections;
-using Dolittle.Lifecycle;
-using Dolittle.Logging;
+using System.Linq;
 using NModbus;
 using NModbus.Device;
 using NModbus.IO;
+using Serilog;
+using RaaLabs.Edge.Connectors.Modbus.Model;
+using System.Runtime.Serialization;
+using System.Diagnostics.CodeAnalysis;
 
-namespace RaaLabs.TimeSeries.Modbus
+namespace RaaLabs.Edge.Connectors.Modbus.Bridge
 {
     /// <summary>
     /// Represents an implementation of <see cref="IMaster"/>
     /// </summary>
-    [Singleton]
-    public class Master : IMaster, IDisposable
+    [ExcludeFromCodeCoverage]
+    public class Master : IMaster
     {
         readonly ConnectorConfiguration _configuration;
         readonly ILogger _logger;
@@ -40,21 +42,9 @@ namespace RaaLabs.TimeSeries.Modbus
         }
 
         /// <inheritdoc/>
-        public void Dispose()
-        {
-            _client?.Dispose();
-            _client = null;
-            _adapter?.Dispose();
-            _adapter = null;
-            _master?.Dispose();
-            _master = null;
-        }
-
-        /// <inheritdoc/>
         public async Task<byte[]> Read(Register register)
         {
             MakeSureClientIsConnected();
-
             _logger.Information($"Getting data from slave {register.Unit} startingAdress {register.StartingAddress} size {register.Size} as DataType {Enum.GetName(typeof(DataType), register.DataType)}");
 
 
@@ -62,7 +52,7 @@ namespace RaaLabs.TimeSeries.Modbus
 
             try
             {
-                ushort[] result = new ushort[0];
+                ushort[] result;
                 switch (register.FunctionCode)
                 {
                     case FunctionCode.HoldingRegister:
@@ -74,10 +64,10 @@ namespace RaaLabs.TimeSeries.Modbus
 
                         break;
                     default:
-                        result = new ushort[0];
+                        result = Array.Empty<ushort>();
                         break;
                 }
-                var bytes = result.GetBytes(_configuration.Endianness);
+                var bytes = result.GetBytes(_configuration.Endianness, register.DataType).ToArray();
                 return bytes;
 
             }
@@ -87,7 +77,8 @@ namespace RaaLabs.TimeSeries.Modbus
                 _client?.Close();
                 _client?.Dispose();
                 _client = null;
-                throw new Exception();
+
+                throw new ModbusMasterException($"Read operation cancelled while reading register {register}", canceled);
             }
             catch (Exception ex)
             {
@@ -95,11 +86,12 @@ namespace RaaLabs.TimeSeries.Modbus
                 _client?.Close();
                 _client?.Dispose();
                 _client = null;
-                throw new Exception();
+
+                throw new ModbusMasterException($"Trouble reading register {register}", ex);
             }
         }
 
-        async Task<T> DoWithTimeout<T>(Task<T> task, int timeout)
+        static async Task<T> DoWithTimeout<T>(Task<T> task, int timeout)
         {
             if (await Task.WhenAny(task, Task.Delay(timeout)) == task)
             {
@@ -111,7 +103,7 @@ namespace RaaLabs.TimeSeries.Modbus
             }
         }
 
-        ushort GetDataSizeFrom(DataType type)
+        private static ushort GetDataSizeFrom(DataType type)
         {
             switch (type)
             {
@@ -145,6 +137,25 @@ namespace RaaLabs.TimeSeries.Modbus
                 if (_configuration.UseASCII) _master = factory.CreateAsciiMaster(_adapter);
                 else if (_configuration.Protocol == Protocol.Tcp) _master = factory.CreateMaster(_client);
                 else _master = factory.CreateRtuMaster(_adapter);
+            }
+        }
+
+        [Serializable]
+        public class ModbusMasterException : Exception
+        {
+            public ModbusMasterException(string message) : base(message)
+            {
+
+            }
+
+            public ModbusMasterException(string message, Exception inner) : base(message, inner)
+            {
+
+            }
+
+            protected ModbusMasterException(SerializationInfo info, StreamingContext context) : base(info, context)
+            {
+
             }
         }
     }

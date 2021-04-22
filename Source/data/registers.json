@@ -1,9 +1,9 @@
 [
     {
     "unit": 1,
-    "startingAddress": 2,
+    "startingAddress": 100,
     "dataType": 3,
     "functionCode": 2,
-    "size": 1
+    "size": 4
     }
     ]

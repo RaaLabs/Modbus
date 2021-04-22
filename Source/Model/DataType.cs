@@ -3,24 +3,31 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-namespace RaaLabs.TimeSeries.Modbus
+namespace RaaLabs.Edge.Connectors.Modbus.Model
 {
     /// <summary>
-    /// The protocol to use for connections
+    /// Represents the different types of data a <see cref="Register"/> can have
     /// </summary>
-    public enum Protocol
+    public enum DataType
     {
         /// <summary>
-        /// Straight Modbus TCP
+        /// 32 bit integer
         /// </summary>
-        Tcp = 1,
+        Int32=1,
 
         /// <summary>
-        /// Rtu over TCP 
+        /// Unsigned 32 bit integer
         /// </summary>
-        /// <remarks>
-        /// More details : https://www.rtautomation.com/technologies/modbus-rtu/
-        /// </remarks>
-        RtuOverTcp
+        Uint32,
+
+        /// <summary>
+        /// IEEE 754 floating point; https://en.m.wikipedia.org/wiki/IEEE_754
+        /// </summary>
+        Float,
+
+        /// <summary>
+        /// 16 bit integer
+        /// </summary>
+        Int16
     }
 }

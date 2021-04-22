@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-namespace RaaLabs.TimeSeries.Modbus
+namespace RaaLabs.Edge.Connectors.Modbus.Model
 {
     /// <summary>
     /// The endian to expect from the data
