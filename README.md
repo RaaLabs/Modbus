@@ -1,73 +1,151 @@
-# Modbus
+# Connectors.Modbus
 
-![CI/CD](https://github.com/RaaLabs/Modbus/workflows/.NET%20Core/badge.svg)
-[![codecov](https://codecov.io/gh/Raalabs/Modbus/branch/master/graph/badge.svg)](https://codecov.io/gh/Raalabs/Modbus)
+[![.NET 5.0](https://github.com/RaaLabs/Modbus/actions/workflows/dotnet-core.yml/badge.svg)](https://github.com/RaaLabs/Modbus/actions/workflows/dotnet-core.yml)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=RaaLabs_Modbus&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=RaaLabs_Modbus)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=RaaLabs_Modbus&metric=coverage)](https://sonarcloud.io/dashboard?id=RaaLabs_Modbus)
 
-## Cloning
+## What does it do?
 
-This repository has sub modules, clone it with:
+The Modbus connector polls a Modbus register for data with a given interval.
 
-```shell
-$ git clone --recursive <repository url>
+The connector produces events to EdgeHub with the output name "output", and should be routed to [IdentityMapper](https://github.com/RaaLabs/IdentityMapper).
+
+## Configuration
+
+The module is configured using the following configuration files:
+
+### connector.json
+
+This file configures the connection to the Modbus server itself. It contains IP address and port, polling interval, read timeout,
+[endianness](https://en.wikipedia.org/wiki/Endianness), protocol type (TCP/RTU), and ASCII mode.
+
+A typical `connector.json` looks like this:
+
+```json
+{
+    "ip": "host.docker.internal",
+    "port": "502",
+    "useASCII": false,
+    "endianness": 4,
+    "protocol": 2,
+    "interval": 2000,
+    "readTimeout": 1000
+}
 ```
 
-If you've already cloned it, you can get the submodules by doing the following:
+#### Endianness
 
-```shell
-$ git submodule update --init --recursive
+These are the valid values for endianness:
+
+| Value | Meaning              |
+| 1     | High Byte, High Word |
+| 2     | High Byte, Low Word  |
+| 3     | Low Byte, High Word  |
+| 4     | Low Byte, Low Word   |
+
+#### Protocol
+
+These are the valid values for protocol type:
+
+| Value | Meaning       |
+| 1     | TCP           |
+| 2     | RTU over TCP  |
+
+
+### registers.json
+
+This file configures which registers to fetch from the Modbus server. It consists of an array of register configurations, each of which
+contain information about Modbus unit id, address, data type, function code and number of data points.
+
+A typical `registers.json` looks like this:
+
+```json
+[
+    {
+        "unit": 1,
+        "startingAddress": 100,
+        "dataType": 3,
+        "functionCode": 2,
+        "size": 4
+    },
+    {
+        "unit": 1,
+        "startingAddress": 200,
+        "dataType": 3,
+        "functionCode": 2,
+        "size": 4
+    }
+]
 ```
 
-## Building
+#### dataType
 
-All the build things are from a submodule.
-To build, run one of the following:
+These are the valid values for data type:
+| Value | Meaning |
+| 1     | int32   |
+| 2     | uint32  |
+| 3     | float   |
+| 4     | int16   |
 
-Windows:
 
-```shell
-$ Build\build.cmd
-```
+#### functionCode
 
-Linux / macOS
+These are the valid values for function code:
+| Value | Meaning          |
+| 1     | Coil             |
+| 2     | Holding Register |
+| 3     | Input            |
+| 4     | Input Register   |
 
-```shell
-$ Build\build.sh
-```
 
-## Getting started
+## IoT Edge Deployment
 
-This solution is built on top of [Azure IoT Edge](https://github.com/Azure/iotedge), and to be able to work locally and run it locally, you will need the development
-environment - read more about that [here](https://docs.microsoft.com/en-us/azure/iot-edge/development-environment).
-It mentions the use of the [iotedgedev](https://github.com/Azure/iotedgedev) tool.
-
-### VSCode
-
-If you are using VSCode or similar text editor, just open up the folder from the root. This solution uses a [sub-module](https://github.com/dolittle-tools/DotNET.Build) (as described above).
-It comes with a few things that makes development a little bit easier, a set of VSCode tasks as described [here](https://github.com/dolittle-tools/DotNET.Build#visual-studio-code-tasks).
-
-In addition to this there is a couple of Debug launch settings set up as well to enable debugging directly.
-
-### Visual Studio 201x
-
-Open up the [.sln](./Terasaki.sln) file at the root of the project.
-
-## Deploying
-
-### Module
+### $edgeAgent
 
 In your `deployment.json` file, you will need to add the module. For more details on modules in IoT Edge, go [here](https://docs.microsoft.com/en-us/azure/iot-edge/module-composition).
 
+The module has persistent state and it is assuming that this is in the `data` folder relative to where the binary is running.
+Since this is running in a containerized environment, the state is not persistent between runs. To get this state persistent, you'll
+need to configure the deployment to mount a folder on the host into the data folder.
+
+In your `deployment.json` file where you added the module, inside the `HostConfig` property, you should add the
+volume binding.
+
 ```json
-"modules": {
-    "RaaLabs.TimeSeries.Modbus": {
-    "version": "1.0",
-    "type": "docker",
-    "status": "running",
-    "restartPolicy": "always",
-    "settings": {
-        "image": "dolittle/timeseries-modbus",
-        "createOptions": {
-        "HostConfig": {}
+"Binds": [
+    "<mount-path>:/app/data"
+]
+```
+
+```json
+{
+    "modulesContent": {
+        "$edgeAgent": {
+            "properties.desired.modules.Modbus": {
+                "settings": {
+                    "image": "<repo-name>/connectors-modbus:<tag>",
+                    "createOptions": "{\"HostConfig\":{\"Binds\":[\"<mount-path>:/app/data\"]}}"
+                },
+                "type": "docker",
+                "version": "1.0",
+                "status": "running",
+                "restartPolicy": "always"
+            }
+        }
+    }
+}
+```
+
+For production setup, the bind mount can be replaced by a docker volume.
+
+### $edgeHub
+
+The routes in edgeHub can be specified like the example below.
+
+```json
+{
+    "$edgeHub": {
+        "properties.desired.routes.ModbusToIdentityMapper": "FROM /messages/modules/Modbus/outputs/output INTO BrokeredEndpoint(\"/modules/IdentityMapper/inputs/events\")",
     }
 }
 ```
