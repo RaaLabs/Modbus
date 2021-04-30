@@ -38,6 +38,7 @@ A typical `connector.json` looks like this:
 These are the valid values for endianness:
 
 | Value | Meaning              |
+| ----- | -------------------- |
 | 1     | High Byte, High Word |
 | 2     | High Byte, Low Word  |
 | 3     | Low Byte, High Word  |
@@ -48,6 +49,7 @@ These are the valid values for endianness:
 These are the valid values for protocol type:
 
 | Value | Meaning       |
+| ----- | ------------- |
 | 1     | TCP           |
 | 2     | RTU over TCP  |
 
@@ -82,6 +84,7 @@ A typical `registers.json` looks like this:
 
 These are the valid values for data type:
 | Value | Meaning |
+| ----- | ------- |
 | 1     | int32   |
 | 2     | uint32  |
 | 3     | float   |
@@ -92,6 +95,7 @@ These are the valid values for data type:
 
 These are the valid values for function code:
 | Value | Meaning          |
+| ----- | ---------------- |
 | 1     | Coil             |
 | 2     | Holding Register |
 | 3     | Input            |
