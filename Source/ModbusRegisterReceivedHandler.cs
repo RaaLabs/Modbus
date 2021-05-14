@@ -44,10 +44,10 @@ namespace RaaLabs.Edge.Connectors.Modbus
                 {
                     var output = new ModbusDatapointOutput
                     {
-                        source = "Modbus",
-                        tag = tagWithData.tag,
-                        timestamp = timestamp,
-                        value = tagWithData.data
+                        Source = "Modbus",
+                        Tag = tagWithData.tag,
+                        Timestamp = timestamp,
+                        Value = tagWithData.data
                     };
 
                     SendEvent(output);
