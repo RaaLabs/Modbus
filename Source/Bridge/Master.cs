@@ -4,11 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 using System;
 using System.Net.Sockets;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
 using NModbus;
-using NModbus.Device;
 using NModbus.IO;
 using Serilog;
 using RaaLabs.Edge.Connectors.Modbus.Model;
