@@ -1,12 +1,6 @@
 using RaaLabs.Edge.Connectors.Modbus.Events;
 using RaaLabs.Edge.Modules.EventHandling;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Serilog;
-using RaaLabs.Edge.Connectors.Modbus.Model;
 
 namespace RaaLabs.Edge.Connectors.Modbus
 {
@@ -44,10 +38,10 @@ namespace RaaLabs.Edge.Connectors.Modbus
                 {
                     var output = new ModbusDatapointOutput
                     {
-                        source = "Modbus",
-                        tag = tagWithData.tag,
-                        timestamp = timestamp,
-                        value = tagWithData.data
+                        Source = "Modbus",
+                        Tag = tagWithData.tag,
+                        Timestamp = timestamp,
+                        Value = tagWithData.data
                     };
 
                     SendEvent(output);

@@ -3,8 +3,6 @@ name: .NET 5.0
 env:
   PRERELEASE_BRANCHES: experimental,alpha,beta,rc
   DOCKER_HUB_REPO: ${{ secrets.RAAEDGE_LOGIN_SERVER }}/modbus
-  COVERAGE_FOLDER: Coverage
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 on:
   push:

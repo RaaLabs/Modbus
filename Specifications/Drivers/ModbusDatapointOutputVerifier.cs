@@ -10,32 +10,32 @@ namespace RaaLabs.Edge.Connectors.Modbus.Specs.Drivers
         {
             if (row["Source"].Trim() != "")
             {
-                @event.source.Should().Be(row["Source"]);
+                @event.Source.Should().Be(row["Source"]);
             }
             if (row["Tag"].Trim() != "")
             {
-                @event.tag.Should().Be(row["Tag"]);
+                @event.Tag.Should().Be(row["Tag"]);
             }
             if (row["Value"].Trim() != "")
             {
-                if (@event.value is short)
+                if (@event.Value is short)
                 {
-                    short actualValue = @event.value;
+                    short actualValue = @event.Value;
                     actualValue.Should().Be(short.Parse(row["Value"]));
                 }
-                else if (@event.value is uint)
+                else if (@event.Value is uint)
                 {
-                    uint actualValue = @event.value;
+                    uint actualValue = @event.Value;
                     actualValue.Should().Be(uint.Parse(row["Value"]));
                 }
-                else if (@event.value is int)
+                else if (@event.Value is int)
                 {
-                    int actualValue = @event.value;
+                    int actualValue = @event.Value;
                     actualValue.Should().Be(int.Parse(row["Value"]));
                 }
-                else if (@event.value is float)
+                else if (@event.Value is float)
                 {
-                    float actualValue = @event.value;
+                    float actualValue = @event.Value;
                     actualValue.Should().BeApproximately(float.Parse(row["Value"]), 0.0001f);
                 }
             }

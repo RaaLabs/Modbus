@@ -13,9 +13,9 @@
     
     <ItemGroup>
         <PackageReference Include="nmodbus" Version="3.0.62" />
-        <PackageReference Include="RaaLabs.Edge" Version="1.1.1" />
-        <PackageReference Include="RaaLabs.Edge.Modules.Configuration" Version="1.1.1" />
-        <PackageReference Include="RaaLabs.Edge.Modules.EdgeHub" Version="1.1.1" />
-        <PackageReference Include="RaaLabs.Edge.Modules.EventHandling" Version="1.1.1" />
+        <PackageReference Include="RaaLabs.Edge" Version="1.2.3" />
+        <PackageReference Include="RaaLabs.Edge.Modules.Configuration" Version="1.2.3" />
+        <PackageReference Include="RaaLabs.Edge.Modules.EdgeHub" Version="1.2.3" />
+        <PackageReference Include="RaaLabs.Edge.Modules.EventHandling" Version="1.2.3" />
     </ItemGroup>
 </Project>

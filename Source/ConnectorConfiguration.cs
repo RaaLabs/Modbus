@@ -15,6 +15,7 @@ namespace RaaLabs.Edge.Connectors.Modbus
     /// </summary>
     [Name("connector.json")]
     [ExcludeFromCodeCoverage]
+    [RestartOnChange]
     public class ConnectorConfiguration : IConfiguration
     {
         /// <summary>
